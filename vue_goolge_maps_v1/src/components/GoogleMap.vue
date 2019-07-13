@@ -189,9 +189,12 @@
 </script>
 
 <style lang="scss" scoped>
+    @import "../styles_fonts";
+    
     body, h1, h2, h3, h4, h5, h6 {
         margin: 0;
         padding: 0;
+        font-family: Roboto-Light, "Roboto-Light", sans-serif;
     }
 
     #map {
@@ -209,7 +212,7 @@
         background-color: #fff;
 
         h4 {
-            font-size: 28px;
+            font-size: 24px;
            
         }
 
