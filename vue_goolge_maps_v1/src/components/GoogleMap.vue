@@ -1,8 +1,10 @@
 <template>
     <div class="container" v-bind:style="{ height: (this.windowHeight) + 'px' }">
-        <gmap-map v-bind="options" id="map" :options="{minZoom :  11 , maxZoom :  17, panControl: false, mapTypeControl: false, overviewMapControl: false, streetViewControl: false, fullscreenControl: false}">
+        <gmap-map v-bind="options" id="map"
+                  :options="{minZoom :  11 , maxZoom :  17, panControl: false, mapTypeControl: false, overviewMapControl: false, streetViewControl: false, fullscreenControl: false}">
             <gmap-cluster :grid-size="gridSize" :styles="clusterStyles">
-                <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
+                <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen"
+                                  @closeclick="infoWinOpen=false">
                 </gmap-info-window>
                 <gmap-marker
                         :key="index"
@@ -18,29 +20,66 @@
         </gmap-map>
 
         <div id="filter">
-            <h4>Фильтры</h4>
-            <h5>Район</h5>
-            <div id="filter_1">
-                <div class="filter_1_container" v-for="(districts, index) in district">
-                    <label :for="'filter_' + (index) + '_check'" class="label-check option">
-                        <input class="label-check__input" type="checkbox" checked :id="'filter_' + (index) + '_check'" :value="districts" @click="check_all_checked(districts)">
-                        <span class="label-check__new-input"></span>
-                        <a>{{districts}}</a>
+            <div class="h1">
+                <r class="header_1">Фильтры</r>
+            </div>
+            <div class="district_box">
+                <div class="h3">
+                    <r class="header_2">Район</r>
+                </div>
+                <div id="filter_1">
+                    <div class="filter_1_container" v-for="(districts, index) in district">
+                        <label :for="'filter1_' + (index) + '_check'" class="label-check option">
+                            <input class="label-check__input" type="checkbox" checked
+                                   :id="'filter1_' + (index) + '_check'" :value="districts"
+                                   @click="check_all_checked(districts)">
+                            <span class="label-check__new-input"></span>
+                            <a class="checkbox_text">{{districts}}</a>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="type_box">
+                <div class="h3">
+                    <r class="header_2">Тематика</r>
+                </div>
+                <div id="filter_2">
+                    <div class="filter_2_container" v-for="(types, index) in type">
+                        <label :for="'filter2_' + (index) + '_check'" class="label-check option">
+                            <input class="label-check__input" type="checkbox" checked
+                                   :id="'filter2_' + (index) + '_check'"
+                                   :value="type" @click="check_all_checked(types)">
+                            <span class="label-check__new-input"></span>
+                            <a class="checkbox_text">{{types}}</a>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sort_box">
+                <div class="h3">
+                    <r class="header_2">Сортировка</r>
+                </div>
+                <div class="sort_block">
+                    <label>
+                        <select class="sorting">
+                            <option>По удаленности</option>
+                            <option>По актуальности</option>
+                            <option>По дате создания</option>
+                            <option>По статусу выполнения</option>
+                        </select>
                     </label>
                 </div>
             </div>
-            <h5>Тематика</h5>
-            <div id="filter_2">
-                <div class="filter_2_cont"></div>
-            </div>
-            <h4>Сортировка</h4>
 
         </div>
     </div>
 </template>
 
 <script>
-    import { gmapApi } from "vue2-google-maps";
+    import {gmapApi} from "vue2-google-maps";
     import GmapCluster from 'vue2-google-maps/dist/components/cluster'
     import GmapCustomMarker from 'vue2-gmap-custom-marker';
     import Vue from 'vue';
@@ -62,11 +101,15 @@
                 gridSize: 100,
                 markerOptions: {
                     url: mapMarker,
-                   // size: {width: 60, height: 90, f: 'px', b: 'px',},
+                    // size: {width: 60, height: 90, f: 'px', b: 'px',},
                     scaledSize: {width: 40, height: 40, f: 'px', b: 'px',},
                 },
-                selected_district: ["Октябрьский","Железнодорожный","Ленинский","Первомайский"],
-                district: ["Октябрьский","Железнодорожный","Ленинский","Первомайский"],
+                selected_district: ["Октябрьский", "Железнодорожный", "Ленинский", "Первомайский"],
+                district: ["Октябрьский", "Железнодорожный", "Ленинский", "Первомайский"],
+
+                selected_type: ['Образование', 'Транспорт', 'Экология', 'Социум', 'Безопасность'],
+                type: ['Образование', 'Транспорт', 'Экология', 'Социум', 'Безопасность'],
+
                 options: {  // опции карты
                     zoom: 12,
                     zoomControl: true,
@@ -86,27 +129,27 @@
                 },
                 markers: [
                     {
-                        position: { lat: 53.181684, lng: 45.006000 },
+                        position: {lat: 53.181684, lng: 45.006000},
                         infoText: '<strong>Marker 1</strong>',
                     },
                     {
-                        position: { lat: 53.221786, lng: 44.925017 },
+                        position: {lat: 53.221786, lng: 44.925017},
                         infoText: '<strong>Marker 2</strong>'
                     },
                     {
-                        position: { lat: 53.224440, lng: 44.945736 },
+                        position: {lat: 53.224440, lng: 44.945736},
                         infoText: '<strong>Marker 3</strong>'
                     },
                     {
-                        position: { lat: 53.209817, lng: 44.972125 },
+                        position: {lat: 53.209817, lng: 44.972125},
                         infoText: '<strong>Marker 4</strong>'
                     },
                     {
-                        position: { lat: 53.182392, lng: 45.011556 },
+                        position: {lat: 53.182392, lng: 45.011556},
                         infoText: '<strong>Marker 5</strong>'
                     },
                     {
-                        position: { lat: 53.218497, lng: 44.888768 },
+                        position: {lat: 53.218497, lng: 44.888768},
                         infoText: '<strong>Marker 6</strong>'
                     },
                 ],
@@ -116,7 +159,7 @@
                         url: mapCluster34,
                         height: 34,
                         width: 34,
-                        
+
                     },
                     {
                         textColor: '#fff',
@@ -134,19 +177,17 @@
                 windowHeight: window.innerHeight,
             };
         },
-        mounted () {
+        mounted() {
             window.onresize = (event) => {
 
                 this.windowHeight = window.innerHeight;
 
-                }
+            }
         },
         components: {
             gmapApi
         },
-        computed: {
-
-        },
+        computed: {},
         methods: {
             check_all_checked(value) {
                 let include = this.selected_district.indexOf(value);
@@ -157,17 +198,17 @@
                     this.selected_district.push(value);
                 }
 
-                (this.selected_district.length !== this.district.length)?(this.check_filter_publication_all = false):(this.check_filter_publication_all = true);
+                (this.selected_district.length !== this.district.length) ? (this.check_filter_publication_all = false) : (this.check_filter_publication_all = true);
 
-              /*  if (this.selected_district.length !== this.types_of_publication.length) {
-                    this.check_filter_publication_all = false;
-                    document.getElementById('filter_check_all').checked = true;      // disable checkbox
-                } else {
-                    this.check_filter_publication_all = true;
-                    document.getElementById('filter_check_all').checked = false;      // enable checkbox
-                }    */
+                /*  if (this.selected_district.length !== this.types_of_publication.length) {
+                      this.check_filter_publication_all = false;
+                      document.getElementById('filter_check_all').checked = true;      // disable checkbox
+                  } else {
+                      this.check_filter_publication_all = true;
+                      document.getElementById('filter_check_all').checked = false;      // enable checkbox
+                  }    */
 
-                 console.log(this.selected_district);
+                console.log(this.selected_district);
                 // console.log("include = " + include);
             },
 
@@ -190,11 +231,15 @@
 
 <style lang="scss" scoped>
     @import "../styles_fonts";
-    
+
+    $text_color: #222;
+    $second_color: #888888;
+
+
+
     body, h1, h2, h3, h4, h5, h6 {
         margin: 0;
         padding: 0;
-        font-family: Roboto-Light, "Roboto-Light", sans-serif;
     }
 
     #map {
@@ -208,17 +253,14 @@
         top: 0;
         right: 0;
         width: 300px;
-        min-height: 400px;
-        background-color: #fff;
-
-        h4 {
-            font-size: 24px;
-           
-        }
-
-        .filter_1_container {
-            padding: 5px 10px;
-        }
+        height: 100%;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        background-color: #f5f5f5;
+        color: $text_color;
+        -ms-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
 
         // чекбоксы
         .label-check {
@@ -236,34 +278,142 @@
         .label-check__new-input {
             position: absolute;
             left: -35px;
-            top: 4px;
-            width: 28px;
-            height: 28px;
+            width: 20px;
+            height: 20px;
+            margin-top: -2px;
             border: 1px solid #cfcfd1;
-            border-radius: 3px;
-        }
-
-        /* Новый чекбокс при выборе */
-        .label-check__input:checked + .label-check__new-input {
-            background: #2f4857;
         }
 
         .label-check__input:checked + .label-check__new-input {
-            background: url('../../img/check.png') no-repeat center;
+            text-align: center;
+            background: url('../../img/check-symbol.png') no-repeat center #0039e7;
+            background-size: 10px;
             animation: animation-checkbox 0.4s ease-in-out;
         }
-        @keyframes animation-checkbox {
-            0% {
-                transform: scale(0.8);
-            }
-            70% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-            }
+
+        h4 {
+            font-size: 16px;
+            font-family: ptr, "PTSans-Regular", sans-serif;
+            margin-top: 10px;
         }
-        
+
+        h5 {
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            font-family: rml, "PTSans-Regular", sans-serif;
+        }
+
+        /*.label-check__input {*/
+            /**/
+        /*}*/
+
+        .filter_1_container {
+            margin-top: 10px;
+        }
+
+        .filter_2_container {
+            margin-top: 10px;
+        }
+
+        .title_filter {
+            border-bottom: 1px solid #BBBBBB;
+            padding-bottom: 10px;
+        }
+
+        .title_district {
+            border-top: 1px solid #BBBBBB;
+            padding-top: 10px;
+            padding-right: 16px;
+        }
+
+
+        .sort_block {
+            margin-top: 10px;
+        }
+
+        .sorting {
+            font-family: rml, "PTSans-Regular", sans-serif;
+            width: 100%;
+        }
+
+        .sorting option {
+            font-family: rml, "PTSans-Regular", sans-serif;
+            color: #BBBBBB
+        }
+
+        .header_1 {
+            font-size: 22px;
+            font-family: ptr, "PTSans-Regular", sans-serif;
+        }
+
+        .header_2 {
+            font-size: 18px;
+            font-family: ptr, "PTSans-Regular", sans-serif;
+        }
+
+        .h1 {
+            border-bottom: 1px solid #dddddd;
+            padding-top: 16px;
+            padding-right: 24px;
+            padding-bottom: 12px;
+            padding-left: 24px;
+        }
+
+        .h2 {
+            padding-top: 8px;
+        }
+
+        .h3 {
+        }
+
+        .checkbox_text {
+            font-family: ptr, "PTSans-Regular", sans-serif;
+            font-size: 14px;
+        }
+
+        .h1::before {
+            background-image: url("../img/filter.svg");
+            display: inline-block;
+            margin-right: 10px;
+            background-repeat: no-repeat;
+            width: 20px;
+            height: 18px;
+            content: '';
+        }
+
+        .district_box {
+            padding-top: 12px;
+            padding-right: 24px;
+            padding-bottom: 12px;
+            padding-left: 24px;
+            background: #fff;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .type_box {
+            border-top: 1px solid #dddddd;
+            margin-top: 12px;
+            padding-top: 12px;
+            padding-right: 24px;
+            padding-bottom: 12px;
+            padding-left: 24px;
+            background: #fff;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .sort_box {
+            border-top: 1px solid #dddddd;
+            margin-top: 12px;
+            padding-top: 12px;
+            padding-right: 24px;
+            padding-bottom: 12px;
+            padding-left: 24px;
+            background: #fff;
+            border-bottom: 1px solid #dddddd;
+            margin-bottom: 12px;
+        }
+
     }
 
 </style>
