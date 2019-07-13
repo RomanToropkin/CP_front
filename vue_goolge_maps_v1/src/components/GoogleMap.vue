@@ -7,7 +7,11 @@
                             <div id="menu"><img src="../../img/menu.png"/></div>
                             <div id="search"><input type="search" name="search" placeholder="Поиск петиции" v-model="search"></div>
                         </div>
-                        <div id="modal_container" v-bind:style="{ height: (this.windowHeight - 56) + 'px' }">
+                        <div id="table">
+                            <div id="important">Важность</div>
+                            <div id="description">Описание петиции</div>
+                        </div>
+                        <div id="modal_container" v-bind:style="{ height: (this.windowHeight - 101) + 'px' }">
                             <div class="modal_item" v-for="(list_problem, index) in searchList">
                                 <div class="modal_item_squre">{{list_problem.content[0].number}}</div>
                                 <div class="modal_item_text_container">
@@ -109,10 +113,13 @@
     Vue.component('GmapCluster', GmapCluster);
     Vue.component('GmapCustomMarker', GmapCustomMarker);
 
-    const mapMarker = require('../../img/marker.png');
+    const mapMarker = require('../../img/vector_marker.svg');
     const mapCluster34 = require('../../img/Ellipse34.png');
     const mapCluster44 = require('../../img/Ellipse44.png');
     const mapCluster64 = require('../../img/Ellipse64.png');
+    // const mapCluster34 = require('../../img/circle.svg');
+    // const mapCluster44 = require('../../img/circle.svg');
+    // const mapCluster64 = require('../../img/circle.svg');
 
     export default {
         name: "GoogleMap",
@@ -294,11 +301,14 @@
     @import "../styles_fonts";
 
     $text_color: #222222;
+    $second_text_color: #717171;
+    $def_font: PTSans-Regular, "PTSans-Regular", sans-serif;
+    $bg_color: #f5f5f5;
     
     body, h1, h2, h3, h4, h5, h6 {
         margin: 0;
         padding: 0;
-        font-family: Roboto-Light, "Roboto-Light", sans-serif;
+        font-family: $def_font;
     }
 
     .fade-enter-active, .fade-leave-active {
@@ -318,6 +328,34 @@
         /* .slide-fade-leave-active до версии 2.1.8 */ {
         transform: translateX(-500px);
       //  opacity: 0;
+    }
+
+    #table{
+        display: flex;
+        flex-direction: row;
+        height: 40px;
+        width: 100%;
+        border-bottom: 1px solid #5f5f5f;
+        background-color: #cecdc7;
+        font-family: $def_font;
+    }
+
+
+    #important{
+        width: 20%;
+        height: 100%;
+        border-right: 1px solid #5f5f5f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #description{
+        width: 80%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     #modal_show_btn_open {
@@ -364,17 +402,24 @@
         font-size: 16px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 
+        #search{
+            width: 100%;
+            margin-left: 20px;
+        }
+
         #top {
             background-color: #434240;
             display: flex;
             flex-direction: row;
             align-items: center;
-            padding: 0 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
 
             #search input {
                 height: 40px;
-                width: 400px;
-                margin: 8px 0 8px 20px;
+                width: 100%;
                 padding-right: 10px;
                 font-size: 16px;
                 padding-left: 10px;
@@ -393,6 +438,8 @@
 
         #modal_container {
             overflow: auto;
+            font-family: $def_font;
+            background-color: #f5f5f5;
             
             .modal_item {
                 display: flex;
@@ -403,14 +450,17 @@
                 .modal_item_squre {
                     width: 60px;
                     height: 60px;
-                    background-color: #3300FF;    // default #3300FF
+                    background-color: #000096;    // default #3300FF
                     border-radius: 50px;
-                    border: 1px solid #bbb;
+                    border: 1px solid #826df3;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     color: #fff;
                     margin: 0 20px;
+                    box-shadow:5px 5px 10px 0px rgba(189,189,189,1);
+                    -webkit-box-shadow:5px 5px 10px 0px rgba(189,189,189,1);
+                    -moz-box-shadow:5px 5px 10px 0px rgba(189,189,189,1);
                 }
 
                 .modal_item_text_container {
@@ -418,10 +468,13 @@
                     width: 380px;
 
                     .modal_item_text_header {
-                        font-weight: bold;
+                        font-size: 16px;
+                        color: $text_color;
                     }
                     .modal_item_text_a {
-                        color: #717171;
+                        color: $second_text_color;
+                        font-size: 14px;
+                        margin-top: 6px;
                     }
                 }
 
@@ -544,23 +597,23 @@
         }
 
         .sorting {
-            font-family: rml, "PTSans-Regular", sans-serif;
+            font-family: $def_font;
             width: 100%;
         }
 
         .sorting option {
-            font-family: rml, "PTSans-Regular", sans-serif;
-            color: #BBBBBB
+            font-family: $def_font;
+            color: $second_text_color
         }
 
         .header_1 {
             font-size: 22px;
-            font-family: ptr, "PTSans-Regular", sans-serif;
+            font-family: $def_font;
         }
 
         .header_2 {
             font-size: 18px;
-            font-family: ptr, "PTSans-Regular", sans-serif;
+            font-family: $def_font;
         }
 
         .h1 {
@@ -579,7 +632,7 @@
         }
 
         .checkbox_text {
-            font-family: ptr, "PTSans-Regular", sans-serif;
+            font-family: $def_font;
             font-size: 14px;
         }
 
