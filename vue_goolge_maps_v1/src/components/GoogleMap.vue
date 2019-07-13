@@ -1,19 +1,39 @@
 <template>
     <div class="container" v-bind:style="{ height: (this.windowHeight) + 'px' }">
-        <gmap-map v-bind="options" id="map"
-                  :options="{minZoom :  11 , maxZoom :  17, panControl: false, mapTypeControl: false, overviewMapControl: false, streetViewControl: false, fullscreenControl: false}">
+        <transition name="slide-fade">
+            <div id="modal_cont" v-if="modal_show">
+                    <div id="modal">
+                        <div id="top">
+                            <div id="menu"><img src="../../img/menu.png"/></div>
+                            <div id="search"><input type="search" name="search" placeholder="Поиск петиции" v-model="search"></div>
+                        </div>
+                        <div id="modal_container" v-bind:style="{ height: (this.windowHeight - 56) + 'px' }">
+                            <div class="modal_item" v-for="(list_problem, index) in searchList">
+                                <div class="modal_item_squre">{{list_problem.content[0].number}}</div>
+                                <div class="modal_item_text_container">
+                                    <div class="modal_item_text_header">{{list_problem.content[1].header}}</div>
+                                    <div class="modal_item_text_a">{{list_problem.content[2].text}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div id="modal_show_btn" @click="modal_show = !modal_show"><img src="../../img/left_btn.png"/></div>
+            </div>
+        </transition>
+        <transition name="fade"><div id="modal_show_btn_open" @click="modal_show = !modal_show" v-if="modal_show === false"><img src="../../img/right_btn.png"/></div></transition>
+
+        <gmap-map v-bind="options" id="map" :options="{minZoom :  11 , maxZoom :  17, panControl: false, mapTypeControl: false, overviewMapControl: false, streetViewControl: false, fullscreenControl: false}">
             <gmap-cluster :grid-size="gridSize" :styles="clusterStyles">
-                <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen"
-                                  @closeclick="infoWinOpen=false">
+                <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
                 </gmap-info-window>
                 <gmap-marker
                         :key="index"
-                        v-for="(marker, index) in markers"
-                        :position="marker.position"
+                        v-for="(list_problem, index) in list_problems"
+                        :position="list_problem.content[3].position"
                         :clickable="true"
-                        :label="marker.label"
+                        :label="list_problem.content[3].label"
                         :icon="markerOptions"
-                        @click="toggleInfoWindow(marker, index)"
+                        @click="toggleInfoWindow(list_problem, index)"
                 >
                 </gmap-marker>
             </gmap-cluster>
@@ -82,6 +102,8 @@
     import {gmapApi} from "vue2-google-maps";
     import GmapCluster from 'vue2-google-maps/dist/components/cluster'
     import GmapCustomMarker from 'vue2-gmap-custom-marker';
+    
+    import axios from 'axios';
     import Vue from 'vue';
 
     Vue.component('GmapCluster', GmapCluster);
@@ -99,17 +121,18 @@
                 infoWindowPos: null,
                 infoWinOpen: false,
                 gridSize: 100,
+                search: '',
+                modal_show: true,
                 markerOptions: {
                     url: mapMarker,
-                    // size: {width: 60, height: 90, f: 'px', b: 'px',},
+                   // size: {width: 60, height: 90, f: 'px', b: 'px',},
                     scaledSize: {width: 40, height: 40, f: 'px', b: 'px',},
                 },
-                selected_district: ["Октябрьский", "Железнодорожный", "Ленинский", "Первомайский"],
-                district: ["Октябрьский", "Железнодорожный", "Ленинский", "Первомайский"],
-
-                selected_type: ['Образование', 'Транспорт', 'Экология', 'Социум', 'Безопасность'],
-                type: ['Образование', 'Транспорт', 'Экология', 'Социум', 'Безопасность'],
-
+                list_problems: [
+                    {content:[{number:'100'},{header:'Не хватает пешеходного перехода'},{text:'Проблематично пройти в почтовое отделение на Красной'},{position: { lat: 53.181684, lng: 45.006000 }}]},
+                ],
+                selected_district: ["Октябрьский","Железнодорожный","Ленинский","Первомайский"],
+                district: ["Октябрьский","Железнодорожный","Ленинский","Первомайский"],
                 options: {  // опции карты
                     zoom: 12,
                     zoomControl: true,
@@ -129,27 +152,27 @@
                 },
                 markers: [
                     {
-                        position: {lat: 53.181684, lng: 45.006000},
+                        position: { lat: 53.181684, lng: 45.006000 },
                         infoText: '<strong>Marker 1</strong>',
                     },
                     {
-                        position: {lat: 53.221786, lng: 44.925017},
+                        position: { lat: 53.221786, lng: 44.925017 },
                         infoText: '<strong>Marker 2</strong>'
                     },
                     {
-                        position: {lat: 53.224440, lng: 44.945736},
+                        position: { lat: 53.224440, lng: 44.945736 },
                         infoText: '<strong>Marker 3</strong>'
                     },
                     {
-                        position: {lat: 53.209817, lng: 44.972125},
+                        position: { lat: 53.209817, lng: 44.972125 },
                         infoText: '<strong>Marker 4</strong>'
                     },
                     {
-                        position: {lat: 53.182392, lng: 45.011556},
+                        position: { lat: 53.182392, lng: 45.011556 },
                         infoText: '<strong>Marker 5</strong>'
                     },
                     {
-                        position: {lat: 53.218497, lng: 44.888768},
+                        position: { lat: 53.218497, lng: 44.888768 },
                         infoText: '<strong>Marker 6</strong>'
                     },
                 ],
@@ -159,7 +182,6 @@
                         url: mapCluster34,
                         height: 34,
                         width: 34,
-
                     },
                     {
                         textColor: '#fff',
@@ -177,17 +199,37 @@
                 windowHeight: window.innerHeight,
             };
         },
-        mounted() {
+        created() {
+            /* api get */
+            axios
+                .get('http://projectcenter.ddns.net/api.php?module=get&mode=points')
+                .then(response => {
+
+                    let data = response.data.result;
+                    console.log(data);
+                    for (let key in data) {
+                        this.list_problems.push({content: [{number: String(data[key].votes)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {position: { lat: Number(data[key].cord_x), lng:  Number(data[key].cord_y)}}, {id_solution: String(data[key].id_solution)}]});
+                        
+                    }
+                })
+                .catch(error => console.log(error));
+
+        },
+        mounted () {
             window.onresize = (event) => {
 
                 this.windowHeight = window.innerHeight;
 
-            }
+                }
         },
         components: {
             gmapApi
         },
-        computed: {},
+        computed: {
+            searchList () {
+                    return this.list_problems.filter( item => item.content[1].header.toLowerCase().includes(this.search.toLowerCase()))
+            }
+        },
         methods: {
             check_all_checked(value) {
                 let include = this.selected_district.indexOf(value);
@@ -198,17 +240,17 @@
                     this.selected_district.push(value);
                 }
 
-                (this.selected_district.length !== this.district.length) ? (this.check_filter_publication_all = false) : (this.check_filter_publication_all = true);
+                (this.selected_district.length !== this.district.length)?(this.check_filter_publication_all = false):(this.check_filter_publication_all = true);
 
-                /*  if (this.selected_district.length !== this.types_of_publication.length) {
-                      this.check_filter_publication_all = false;
-                      document.getElementById('filter_check_all').checked = true;      // disable checkbox
-                  } else {
-                      this.check_filter_publication_all = true;
-                      document.getElementById('filter_check_all').checked = false;      // enable checkbox
-                  }    */
+              /*  if (this.selected_district.length !== this.types_of_publication.length) {
+                    this.check_filter_publication_all = false;
+                    document.getElementById('filter_check_all').checked = true;      // disable checkbox
+                } else {
+                    this.check_filter_publication_all = true;
+                    document.getElementById('filter_check_all').checked = false;      // enable checkbox
+                }    */
 
-                console.log(this.selected_district);
+                 console.log(this.selected_district);
                 // console.log("include = " + include);
             },
 
@@ -231,15 +273,163 @@
 
 <style lang="scss" scoped>
     @import "../styles_fonts";
-
-    $text_color: #222;
-    $second_color: #888888;
-
-
-
+    
     body, h1, h2, h3, h4, h5, h6 {
         margin: 0;
         padding: 0;
+        font-family: Roboto-Light, "Roboto-Light", sans-serif;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+        opacity: 0;
+    }
+
+    .slide-fade-enter-active {
+        transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-leave-active {
+        transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-enter, .slide-fade-leave-to
+        /* .slide-fade-leave-active до версии 2.1.8 */ {
+        transform: translateX(-500px);
+      //  opacity: 0;
+    }
+
+    #modal_show_btn_open {
+        position: absolute;
+        z-index: 1;
+        width: 40px;
+        height: 40px;
+        background-color: #ffffff;
+        border: 1px solid #bbb;
+        margin: 8px 0 0 4px;
+        border-radius: 5px;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        img {
+            width: 36px;
+            height: 36px;
+
+        }
+    }
+
+    #modal_show_btn_open:hover {
+        cursor: pointer;
+    }
+
+    // левое меню 1
+    #modal_cont {
+        position: absolute;
+        z-index: 5;
+        display: flex;
+        flex-direction: row;
+    }
+
+    #modal {
+      //  position: absolute;
+      //  z-index: 5;
+        top: 0;
+        left: 0;
+        width: 500px;
+        //height: 400px;
+        background-color: #fff;
+        font-size: 16px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+
+        #top {
+            background-color: #434240;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0 20px;
+
+            #search input {
+                height: 40px;
+                width: 400px;
+                margin: 8px 0 8px 20px;
+                padding-right: 10px;
+                font-size: 16px;
+                padding-left: 10px;
+            }
+
+        }
+
+        #menu {
+            width: 30px;
+            height: 30px;
+            img {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        #modal_container {
+            overflow: auto;
+            
+            .modal_item {
+                display: flex;
+                flex-direction: row;
+                padding: 10px 0;
+                border-bottom: 1px solid #bbb;
+                
+                .modal_item_squre {
+                    width: 60px;
+                    height: 60px;
+                    background-color: #3300FF;    // default #3300FF
+                    border-radius: 50px;
+                    border: 1px solid #bbb;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: #fff;
+                    margin: 0 20px;
+                }
+
+                .modal_item_text_container {
+                    margin-right: 20px;
+                    width: 320px;
+
+                    .modal_item_text_header {
+                        font-weight: bold;
+                    }
+                    .modal_item_text_a {
+                        color: #a5a5a5;
+                    }
+                }
+
+
+            }
+        }
+    }
+
+    #modal_show_btn {
+        width: 40px;
+        height: 40px;
+        background-color: #ffffff;
+        border: 1px solid #bbb;
+        margin: 8px 0 0 4px;
+        border-radius: 5px;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        img {
+            width: 36px;
+            height: 36px;
+           
+        }
+    }
+
+    #modal_show_btn:hover {
+        cursor: pointer;
     }
 
     #map {
