@@ -1,10 +1,45 @@
 <template>
     <div class="container" v-bind:style="{ height: (this.windowHeight) + 'px' }">
+        <transition name="fade">
+            <div id="background_black" v-if="second_menu_show"></div>
+        </transition>
+        <transition name="slide-fade">
+            <div id="second_menu" v-if="second_menu_show" v-bind:style="{ height: (this.windowHeight) + 'px' }">
+                <div id="second_menu_header">
+                    <div id="second_menu_header_h">СПОР</div>
+                    <div id="second_menu_header_btn" @click="second_menu_show = false"><img src="../../img/left_btn_2.png"/></div>
+                </div>
+                <div id="second_menu_second">
+                    <div class="second_menu_second_content">
+                        <img src="../../img/petit.png"/>
+                        <a>Петиции</a>
+                    </div>
+                    <div class="second_menu_second_content">
+                        <img src="../../img/pen.png"/>
+                        <a>Вы подписали</a>
+                    </div>
+                    <div class="second_menu_second_content">
+                        <img src="../../img/email.png"/>
+                        <a>Мои петиции</a>
+                    </div>
+                </div>
+                <div id="second_menu_third">
+                    <div class="second_menu_second_content">
+                        <img src="../../img/people.png"/>
+                        <a>Профиль</a>
+                    </div>
+                    <div class="second_menu_second_content">
+                        <img src="../../img/exit.png"/>
+                        <a>Выход</a>
+                    </div>
+                </div>
+            </div>
+        </transition>
         <transition name="slide-fade">
             <div id="modal_cont" v-if="modal_show">
                     <div id="modal">
                         <div id="top">
-                            <div id="menu"><img src="../../img/menu.png"/></div>
+                            <div id="menu" @click="second_menu_show = true"><img src="../../img/menu.png"/></div>
                             <div id="search"><input type="search" name="search" placeholder="Поиск петиции" v-model="search"></div>
                         </div>
                         <div id="modal_container" v-bind:style="{ height: (this.windowHeight - 56) + 'px' }">
@@ -38,63 +73,68 @@
                 </gmap-marker>
             </gmap-cluster>
         </gmap-map>
-
-        <div id="filter">
-            <div class="h1">
-                <a class="header_1">Фильтры</a>
-            </div>
-            <div class="district_box">
-                <div class="h3">
-                    <a class="header_2">Район</a>
+        <transition name="fade">
+            <div class="filter_btn_show_left" v-if="!filter_show" @click="filter_show = true"><img src="../../img/filter.svg"/></div>
+        </transition>
+        <transition name="right">
+            <div id="filter" v-if="filter_show">
+                <div class="h1">
+                    <a class="header_1">Фильтры</a>
+                    <div class="filter_btn_show" @click="filter_show = false"><img src="../../img/right_btn_2.png"/></div>
                 </div>
-                <div id="filter_1">
-                    <div class="filter_1_container" v-for="(districts, index) in district">
-                        <label :for="'filter1_' + (index) + '_check'" class="label-check option">
-                            <input class="label-check__input" type="checkbox" checked
-                                   :id="'filter1_' + (index) + '_check'" :value="districts"
-                                   @click="check_all_checked(districts)">
-                            <span class="label-check__new-input"></span>
-                            <a class="checkbox_text">{{districts}}</a>
+                <div class="district_box">
+                    <div class="h3">
+                        <a class="header_2">Район</a>
+                    </div>
+                    <div id="filter_1">
+                        <div class="filter_1_container" v-for="(districts, index) in district">
+                            <label :for="'filter1_' + (index) + '_check'" class="label-check option">
+                                <input class="label-check__input" type="checkbox" checked
+                                       :id="'filter1_' + (index) + '_check'" :value="districts"
+                                       @click="check_all_checked(districts)">
+                                <span class="label-check__new-input"></span>
+                                <a class="checkbox_text">{{districts}}</a>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="type_box">
+                    <div class="h3">
+                        <a class="header_2">Тематика</a>
+                    </div>
+                    <div id="filter_2">
+                        <div class="filter_2_container" v-for="(types, index) in type">
+                            <label :for="'filter2_' + (index) + '_check'" class="label-check option">
+                                <input class="label-check__input" type="checkbox" checked
+                                       :id="'filter2_' + (index) + '_check'"
+                                       :value="type" @click="check_all_checked_type(types)">
+                                <span class="label-check__new-input"></span>
+                                <a class="checkbox_text">{{types}}</a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sort_box">
+                    <div class="h3">
+                        <a class="header_2">Сортировка</a>
+                    </div>
+                    <div class="sort_block">
+                        <label>
+                            <select class="sorting">
+                                <option>По удаленности</option>
+                                <option>По актуальности</option>
+                                <option>По дате создания</option>
+                                <option>По статусу выполнения</option>
+                            </select>
                         </label>
                     </div>
                 </div>
 
             </div>
-
-            <div class="type_box">
-                <div class="h3">
-                    <a class="header_2">Тематика</a>
-                </div>
-                <div id="filter_2">
-                    <div class="filter_2_container" v-for="(types, index) in type">
-                        <label :for="'filter2_' + (index) + '_check'" class="label-check option">
-                            <input class="label-check__input" type="checkbox" checked
-                                   :id="'filter2_' + (index) + '_check'"
-                                   :value="type" @click="check_all_checked_type(types)">
-                            <span class="label-check__new-input"></span>
-                            <a class="checkbox_text">{{types}}</a>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="sort_box">
-                <div class="h3">
-                    <a class="header_2">Сортировка</a>
-                </div>
-                <div class="sort_block">
-                    <label>
-                        <select class="sorting">
-                            <option>По удаленности</option>
-                            <option>По актуальности</option>
-                            <option>По дате создания</option>
-                            <option>По статусу выполнения</option>
-                        </select>
-                    </label>
-                </div>
-            </div>
-
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -120,9 +160,11 @@
             return {
                 infoWindowPos: null,
                 infoWinOpen: false,
+                second_menu_show: false,
                 gridSize: 100,
                 search: '',
                 modal_show: true,
+                filter_show: true,
                 markerOptions: {
                     url: mapMarker,
                    // size: {width: 60, height: 90, f: 'px', b: 'px',},
@@ -210,7 +252,13 @@
                     let data = response.data.result;
                     console.log(data);
                     for (let key in data) {
-                        this.list_problems.push({content: [{number: String(data[key].votes)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {position: { lat: Number(data[key].cord_x), lng:  Number(data[key].cord_y)}}, {id_solution: String(data[key].id_solution)}]});
+                        let num = data[key].votes;
+                        if (num === null) {
+                            num = '-';
+                        } else {
+                            num += ' %';
+                        }
+                        this.list_problems.push({content: [{number: String(num)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {position: { lat: Number(data[key].cord_x), lng:  Number(data[key].cord_y)}}, {id_solution: String(data[key].id_solution)}]});
                         
                     }
                 })
@@ -290,15 +338,16 @@
     };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     @import "../styles_fonts";
 
     $text_color: #222222;
-    
-    body, h1, h2, h3, h4, h5, h6 {
+
+    html, body, h1, h2, h3, h4, h5, h6 {
         margin: 0;
         padding: 0;
         font-family: Roboto-Light, "Roboto-Light", sans-serif;
+        overflow: hidden;
     }
 
     .fade-enter-active, .fade-leave-active {
@@ -318,6 +367,63 @@
         /* .slide-fade-leave-active до версии 2.1.8 */ {
         transform: translateX(-500px);
       //  opacity: 0;
+    }
+
+
+
+    .right-enter-active {
+        transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        overflow: hidden;
+    }
+    .right-leave-active {
+        transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        overflow: hidden;
+    }
+
+    .right-enter, .right-leave-to
+        /* .slide-fade-leave-active до версии 2.1.8 */ {
+        transform: translateX(500px);
+        //  opacity: 0;
+        overflow: hidden;
+    }
+
+    #background_black {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.51);
+        position: absolute;
+        z-index: 8;
+    }
+
+    // 2-е меню
+
+    #second_menu {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        width: 400px;
+        background-color: #fff;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        img {
+            width: 24px;
+            height: 24px;
+        }
+
+        #second_menu_header, #second_menu_second {
+            border-bottom: 1px solid #bbb;
+        }
+
+        #second_menu_header {
+            display: flex;
+            flex-direction: row;
+
+            #second_menu_header_btn:hover {
+                cursor: pointer;
+            }
+        }
     }
 
     #modal_show_btn_open {
@@ -391,6 +497,10 @@
             }
         }
 
+        #menu:hover {
+            cursor: pointer;
+        }
+
         #modal_container {
             overflow: auto;
             
@@ -460,6 +570,7 @@
     }
 
     #filter {
+        overflow: hidden;
         position: absolute;
         top: 0;
         right: 0;
@@ -569,6 +680,21 @@
             padding-right: 24px;
             padding-bottom: 12px;
             padding-left: 24px;
+            display: flex;
+            flex-direction: row;
+
+            .filter_btn_show {
+                position: absolute;
+                right: 20px;
+                img {
+                    width: 30px;
+                    height: 30px;
+                }
+            }
+
+            .filter_btn_show:hover {
+                cursor: pointer;
+            }
         }
 
         .h2 {
@@ -625,6 +751,30 @@
             margin-bottom: 12px;
         }
 
+    }
+
+    .filter_btn_show_left {
+        position: absolute;
+        background-color: #ffffff;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        right: 4px;
+        top: 8px;
+        width: 40px;
+        height: 40px;
+
+        img {
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    .filter_btn_show_left:hover {
+        cursor: pointer;
     }
 
 </style>
