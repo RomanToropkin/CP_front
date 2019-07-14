@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+    <meta charset="utf-8">
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+	<title>СПОР | Модерация</title>
+<!-- Bootstrap 4 CSS	-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	
+ <!--Plugin CSS file with desired skin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/css/ion.rangeSlider.min.css"/>
+	
+	<link rel="stylesheet" href="css/style.css">
+	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%3A400%2C700&amp;ver=4.8.4" type="text/css" media="all">
+	
+	<link rel="stylesheet" href="css/glyphicons.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 col-lg-2 navbar-container p-0 content">
+        <!-- Вертикальное меню -->
+          <div class="flex-column">
+            <h3 class="text-center mt-2">СПОР</h3>
+           <h4 class="text-center">Панель модератора</h4>
+            <!-- Пункты вертикального меню -->
+            <div class="list-group p-0 list-group-flush">
+             
+              <button value="no_hidden" class="list-group-item list-group-item-action">
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                    <span>Одобренные</span>
+                </button>
+              <button value="hidden" class="list-group-item list-group-item-action ">
+                    <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    <span>Не одобренные</span>
+              </button>
+              <a href="/" class="list-group-item list-group-item-action">
+                  <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+                  <span>Карта</span>
+              </a>
+              <button value="logout" class="list-group-item list-group-item-action">
+                  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                  <span>Выход</span>
+              </button>
+            </div>
+          </div>
+      </div>
+      <div class="col-md-9 col-lg-10 content-container bg-light p-5">
+        <!-- Основной контент страницы  -->
+        <div class="container-fluid p-5 bg-white main-content">
+<!--
+            <a href="#" class="list-group-item list-group-item-action list-group-item-info" data-target="#m1" data-toggle="collapse">
+                <span>1)</span>
+                <span>Очень длинное название чего-то...</span>
+            </a>
+            
+            <div class="list-group pl-4 collapse curses" id="m1">
+                <a class="list-group-item list-group-item-action">
+                   <h5 class="ml-5 m-0">
+                       <span class="glyphicon glyphicon-align-center" aria-hidden="true"></span>
+                       Описание
+                   </h5>
+                    <span>Около магазина "Весна" расположен опасный пешеходный переход из-за того, что там расположена конечная остановка для троллейбусов, которая перекрывает видимость пешеходов, переходящих дорогу. Требуем перенести конечную остановку в другое место или сделать переход регулируемым. </span>
+                </a>
+                <a class="list-group-item list-group-item-action">
+                   <div class="row">
+                       <div class="col-2 type">
+                           <h5 class="ml-5 m-0">
+                               <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                               Тип
+                           </h5>
+                           <input type="text" class="form-control" placeholder="Тип" data-target="type">
+                       </div>
+                       <div class="col-2 district">
+                           <h5 class="ml-5 m-0">
+                               <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
+                               Район
+                           </h5>
+                           <input type="text" class="form-control" placeholder="Район" data-target="district">
+                       </div>
+                       <div class="col stage">
+                           <h5 class="ml-5 m-0">
+                               <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                               Стадия
+                           </h5>
+                            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+                              <label class="btn btn-outline-secondary active">
+                                <input type="radio" name="options" value="0" autocomplete="off" checked> Не выполнен
+                              </label>
+                              <label class="btn btn-outline-info">
+                                <input type="radio" name="options" value="1" autocomplete="off"> В процессе
+                              </label>
+                              <label class="btn btn-outline-success">
+                                <input type="radio" name="options" value="2" autocomplete="off"> Выполнен
+                              </label>
+                            </div>
+                       </div>
+                       <div class="col publish">
+                           <h5 class="ml-5 m-0">
+                               <span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>
+                               Публикация
+                           </h5>
+                            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+                              <label class="btn btn-outline-secondary active">
+                                <input type="radio" name="options" value="0" autocomplete="off" checked> Не опубликовано
+                              </label>
+                              <label class="btn btn-outline-success">
+                                <input type="radio" name="options" value="1" autocomplete="off"> Опубликовано
+                              </label>
+                            </div>
+                       </div>
+                   </div>
+                </a>
+                <a class="list-group-item list-group-item-action">
+                   <h5 class="ml-5 m-0">
+                       <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                       Прогресс
+                   </h5>
+                    <div class="js-range-slider" data-toggle="progress">
+                    </div>
+                </a>
+            </div>
+-->
+            
+            <div class="list-group pl-4 collapse curses" id="m5">
+                <a class="list-group-item list-group-item-action">
+                   <h5 class="ml-5 m-0">
+                       <span class="glyphicon glyphicon-align-center" aria-hidden="true"></span>
+                       Описание
+                   </h5>
+                    <span>Около магазина "Весна" расположен опасный пешеходный переход из-за того, что там расположена конечная остановка для троллейбусов, которая перекрывает видимость пешеходов, переходящих дорогу. Требуем перенести конечную остановку в другое место или сделать переход регулируемым. </span>
+                </a>
+                <a class="list-group-item list-group-item-action">
+                   <div class="row">
+                       <div class="col-2 type">
+                           <h5 class="ml-5 m-0">
+                               <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                               Тип
+                           </h5>
+                           <input type="text" class="form-control" placeholder="Тип" data-target="type">
+                       </div>
+                       <div class="col-2 district">
+                           <h5 class="ml-5 m-0">
+                               <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
+                               Район
+                           </h5>
+                           <input type="text" class="form-control" placeholder="Район" data-target="district">
+                       </div>
+                       <div class="col stage">
+                           <h5 class="ml-5 m-0">
+                               <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                               Стадия
+                           </h5>
+                            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+                              <label class="btn btn-outline-secondary active">
+                                <input type="radio" name="options" value="0" autocomplete="off" checked> Не выполнен
+                              </label>
+                              <label class="btn btn-outline-info">
+                                <input type="radio" name="options" value="1" autocomplete="off"> В процессе
+                              </label>
+                              <label class="btn btn-outline-success">
+                                <input type="radio" name="options" value="2" autocomplete="off"> Выполнен
+                              </label>
+                            </div>
+                       </div>
+                       <div class="col publish">
+                           <h5 class="ml-5 m-0">
+                               <span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>
+                               Публикация
+                           </h5>
+                            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+                              <label class="btn btn-outline-secondary active">
+                                <input type="radio" name="options" value="0" autocomplete="off" checked> Не опубликовано
+                              </label>
+                              <label class="btn btn-outline-success">
+                                <input type="radio" name="options" value="1" autocomplete="off"> Опубликовано
+                              </label>
+                            </div>
+                       </div>
+                   </div>
+                </a>
+                <a class="list-group-item list-group-item-action">
+                   <h5 class="ml-5 m-0">
+                       <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                       Прогресс
+                   </h5>
+                    <div class="js-range-slider" data-toggle="progress">
+                    </div>
+                </a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bootstrap 4 JS	-->
+<!--    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <!--Plugin JavaScript file-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/js/ion.rangeSlider.min.js"></script>
+    
+    <script src="js/moderator.js"></script>
+</body>
+</html>

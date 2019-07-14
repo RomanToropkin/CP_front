@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    font-family: Ledger,'PT Sans',"Google Sans",Roboto,Arial,sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+
+.navbar-container {
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.content {
+    min-height: 100vh;
+    align-items: center;
+    flex-direction: column;
+}
+
+.btn-group label {
+    cursor: pointer;
+}
+
+.btn-group label.active {
+    cursor: default;
+}
+
+.disabled {
+    cursor: default !important;
+}

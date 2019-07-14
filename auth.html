@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+    <meta charset="utf-8">
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+	<title>СПОР | Авторизация</title>
+<!-- Bootstrap 4 CSS	-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="css/style.css">
+	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%3A400%2C700&amp;ver=4.8.4" type="text/css" media="all">
+	
+	<link rel="stylesheet" href="css/glyphicons.css">
+</head>
+<body>
+  <div class="container-fluid bg-light d-flex content pt-5">
+   
+    <div class="d-flex flex-column">
+        <div class="card mb-3 mt-5 w-100">
+          <div class="card-body text-center">
+            <h1 class="card-title text-center font-weight-bold" style="font-size: 5rem">СПОР</h1>
+            <h2 class="card-text font-weight-bold font-italic" style="font-size: 2.1rem">Система Принятия Общественных Решений</h2>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+
+             <div class="card w-50 mr-5 login_form">
+              <div class="card-body">
+                <form class="h-100 d-flex flex-column">
+                 <h5 class="card-title text-center">Авторизация</h5>
+                  <div class="form-group login">
+                    <label for="Login_login">Логин</label>
+                    <input type="login" class="form-control" id="Login_login" aria-describedby="emailHelp" placeholder="Логин / E-mail / Телефон">
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="form-group pass">
+                    <label for="Password_login">Пароль</label>
+                    <input type="password" class="form-control mb-2" id="Password_login" placeholder="Пароль">
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <button type="button" class="btn btn-outline-info w-100 mt-auto" id="login">Войти</button>
+                </form>
+              </div>
+            </div>
+
+             <div class="card w-50 register">
+              <div class="card-body">
+                <h5 class="card-title text-center">Регистрация</h5>
+                <form>
+                  <div class="form-group login">
+                    <label for="Login">Логин</label>
+                    <input type="login" class="form-control" id="Login" aria-describedby="emailHelp" placeholder="Введите логин">
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="form-group pass">
+                    <label for="Password1">Пароль</label>
+                    <input type="password" class="form-control mb-2" id="Password1" placeholder="Введите пароль">
+                    <input type="password" class="form-control" id="Password_confirm" placeholder="Повтор пароля">
+                    <div class="invalid-feedback">Пароли не совпадают</div>
+                  </div>
+                  <div class="form-group fio">
+                      <label for="Fio">ФИО</label>
+                      <input type="login" class="form-control mb-2" id="Last_name" placeholder="Фамилия">
+                      <div class="row">
+                          <div class="col w-50 pr-2">
+                              <input type="login" class="form-control" id="First_name" placeholder="Имя">
+                          </div>
+                          <div class="col w-50 pl-0">
+                              <input type="login" class="form-control" id="Second_name" placeholder="Отчество">
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group passport">
+                    <label for="Passport">Паспортные данные</label>
+                    <div class="row">
+                       <div class="col-4 pr-2 serial">
+                           <input type="login" class="form-control" id="Passport_serial" placeholder="Серия">
+                       </div>
+                       <div class="col pl-0 number">
+                           <input type="login" class="form-control" id="Passport_number" placeholder="Номер">
+                           <div class="invalid-feedback"></div>
+                       </div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-outline-info w-100" id="register">Зарегистрироваться</button>
+                </form>
+              </div>
+            </div>
+        </div>
+    </div>
+    
+  </div>
+  
+  <!-- Bootstrap 4 JS	-->
+<!--    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <script src="js/auth.js"></script>
+</body>
+</html>
