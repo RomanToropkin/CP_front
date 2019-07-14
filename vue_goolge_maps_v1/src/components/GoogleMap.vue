@@ -6,14 +6,15 @@
         <transition name="slide-fade">
             <div id="second_menu" v-if="second_menu_show" v-bind:style="{ height: (this.windowHeight) + 'px' }">
                 <div id="second_menu_header">
-                    <div id="second_menu_header_h">СПОР</div>
+                    <img src="../../img/logo.png" width="72px" height="72px" >
+                    <div id="second_menu_header_h">Система принятия общественных решений</div>
                     <div id="second_menu_header_btn" @click="second_menu_show = false"><img
-                            src="../../img/left_btn_2.png"/></div>
+                            src="../../img/left_btn_2.png" width="32px" height="32px"/></div>
                 </div>
                 <div id="second_menu_second">
                     <div class="second_menu_second_content">
                         <img src="../../img/petit.png"/>
-                        <a>Петиции</a>
+                        <a>Все петиции</a>
                     </div>
                     <div class="second_menu_second_content">
                         <img src="../../img/pen.png"/>
@@ -21,7 +22,7 @@
                     </div>
                     <div class="second_menu_second_content">
                         <img src="../../img/email.png"/>
-                        <a>Мои петиции</a>
+                        <a>Созданные вами петиции</a>
                     </div>
                 </div>
                 <div id="second_menu_third">
@@ -91,6 +92,7 @@
         <transition name="right">
             <div id="filter" v-if="filter_show">
                 <div class="h1">
+                    <img src="../../img/filter.svg" >
                     <a class="header_1">Фильтры</a>
                     <div class="filter_btn_show" @click="filter_show = false"><img src="../../img/right_btn_2.png"/>
                     </div>
@@ -367,12 +369,14 @@
     $text_color: #222222;
     $second_text_color: #717171;
     $def_font: PTSans-Regular, "PTSans-Regular", sans-serif;
+    $bold_font: PTsans-Bold, "PTSans-Bold", sans-serif;
     $bg_color: #f5f5f5;
 
     body, h1, h2, h3, h4, h5, h6 {
         margin: 0;
         padding: 0;
         font-family: $def_font;
+        overflow: hidden;
     }
 
     .fade-enter-active, .fade-leave-active {
@@ -461,29 +465,94 @@
         z-index: 10;
         top: 0;
         left: 0;
-        width: 400px;
-        background-color: #fff;
+        width: 450px;
+        background-color: $bg_color;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         display: flex;
         flex-direction: column;
-
-        img {
-            width: 24px;
-            height: 24px;
-        }
+        font-family: $bold_font;
 
         #second_menu_header, #second_menu_second {
             border-bottom: 1px solid #bbb;
         }
 
+        #second_menu_second, #second_menu_third{
+
+            padding-left: 16px;
+            padding-top: 8px;
+
+            img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        #second_menu_header_h{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 16px;
+            padding-right: 16px;
+            font-size: 21px;
+            width: 100%;
+        }
+
+        #second_menu_header_btn{
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .second_menu_second_content{
+
+            display: flex;
+            flex-direction: row;
+            padding-bottom: 20px;
+
+            a{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding-left: 30px;
+            }
+
+            a:visited {
+                color: #551a8b;
+            }
+            a:hover {
+                color: #06e;
+                cursor: pointer;
+            }
+            a:focus {
+                outline: thin dotted;
+            }
+            a:hover, a:active {
+                outline: 0;
+            }
+
+            a, a:visited, a:active {
+                text-decoration: none;
+                color: $text_color;
+                -webkit-transition: all .1s ease-in-out;
+            }
+
+        }
+
+        .second_menu_second_content.hover{
+            color: blue;
+        }
+
         #second_menu_header {
             display: flex;
             flex-direction: row;
-
+            padding: 16px;
+            height: 60px;
             #second_menu_header_btn:hover {
                 cursor: pointer;
             }
         }
+
     }
 
     #modal_show_btn_open {
@@ -743,6 +812,7 @@
 
         .header_1 {
             font-size: 22px;
+            padding-left: 16px  ;
             font-family: $def_font;
         }
 
@@ -760,14 +830,15 @@
             display: flex;
             flex-direction: row;
 
+            img {
+                width: 30px;
+                height: 30px;
+            }
+
             .filter_btn_show {
                 position: absolute;
                 right: 20px;
 
-                img {
-                    width: 30px;
-                    height: 30px;
-                }
             }
 
             .filter_btn_show:hover {
@@ -785,16 +856,6 @@
         .checkbox_text {
             font-family: $def_font;
             font-size: 14px;
-        }
-
-        .h1::before {
-            background-image: url("../img/filter.svg");
-            display: inline-block;
-            margin-right: 10px;
-            background-repeat: no-repeat;
-            width: 20px;
-            height: 18px;
-            content: '';
         }
 
         .district_box {
