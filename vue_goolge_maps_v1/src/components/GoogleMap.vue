@@ -43,7 +43,7 @@
                             <div id="search"><input type="search" name="search" placeholder="Поиск петиции" v-model="search"></div>
                         </div>
                         <div id="modal_container" v-bind:style="{ height: (this.windowHeight - 56) + 'px' }">
-                            <div class="modal_item" v-for="(list_problem, index) in searchList">
+                            <div class="modal_item" v-for="(list_problem, index) in searchList" @click="problem_list(list_problem, index)">
                                 <div class="modal_item_squre">{{list_problem.content[0].number}}</div>
                                 <div class="modal_item_text_container">
                                     <div class="modal_item_text_header">{{list_problem.content[1].header}}</div>
@@ -281,6 +281,13 @@
             }
         },
         methods: {
+            problem_list(list_problem, i) {
+                console.log('list_problem');
+                let lat = list_problem.content[3].position.lat;
+                let lng = list_problem.content[3].position.lng;
+                this.options.center.lat = lat;
+                this.options.center.lng = lng;
+            },
             cut_text(value) {
                 return (value.length >= 90)?((value.slice(0,90) + "...")):(value)
 
@@ -321,18 +328,8 @@
                 // console.log("include = " + include);
             },
 
-            toggleInfoWindow(marker, index) {
-                this.infoWindowPos = marker.position;
-                this.infoOptions.content = marker.infoText;
-                //check if its the same marker that was selected if yes toggle
-                if (this.currentMidx == index) {
-                    this.infoWinOpen = !this.infoWinOpen;
-                }
-                //if different marker set infowindow to open and reset current marker index
-                else {
-                    this.infoWinOpen = true;
-                    this.currentMidx = index;
-                }
+            toggleInfoWindow(list_problem, index) {
+                this.search = list_problem.content[1].header;
             }
         }
     };
