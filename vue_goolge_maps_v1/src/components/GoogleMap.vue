@@ -17,12 +17,16 @@
                         <a>Все петиции</a>
                     </div>
                     <div class="second_menu_second_content">
-                        <img src="../../img/pen.png"/>
-                        <a>Вы подписали</a>
+                        <img src="../../img/add.svg"/>
+                        <a>Создать петицию</a>
                     </div>
                     <div class="second_menu_second_content">
                         <img src="../../img/email.png"/>
                         <a>Созданные вами петиции</a>
+                    </div>
+                    <div class="second_menu_second_content">
+                        <img src="../../img/pen.png"/>
+                        <a>Вы подписали</a>
                     </div>
                 </div>
                 <div id="second_menu_third">
