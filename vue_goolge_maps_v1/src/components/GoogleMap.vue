@@ -6,13 +6,15 @@
         <transition name="slide-fade">
             <div id="second_menu" v-if="second_menu_show" v-bind:style="{ height: (this.windowHeight) + 'px' }">
                 <div id="second_menu_header">
-                    <div id="second_menu_header_h">СПОР</div>
-                    <div id="second_menu_header_btn" @click="second_menu_show = false"><img src="../../img/left_btn_2.png"/></div>
+                    <img src="../../img/logo.png" width="72px" height="72px" >
+                    <div id="second_menu_header_h">Система принятия общественных решений</div>
+                    <div id="second_menu_header_btn" @click="second_menu_show = false"><img
+                            src="../../img/left_btn_2.png" width="32px" height="32px"/></div>
                 </div>
                 <div id="second_menu_second">
                     <div class="second_menu_second_content">
                         <img src="../../img/petit.png"/>
-                        <a>Петиции</a>
+                        <a>Все петиции</a>
                     </div>
                     <div class="second_menu_second_content">
                         <img src="../../img/pen.png"/>
@@ -20,7 +22,7 @@
                     </div>
                     <div class="second_menu_second_content">
                         <img src="../../img/email.png"/>
-                        <a>Мои петиции</a>
+                        <a>Созданные вами петиции</a>
                     </div>
                 </div>
                 <div id="second_menu_third">
@@ -37,29 +39,39 @@
         </transition>
         <transition name="slide-fade">
             <div id="modal_cont" v-if="modal_show">
-                    <div id="modal">
-                        <div id="top">
-                            <div id="menu" @click="second_menu_show = true"><img src="../../img/menu.png"/></div>
-                            <div id="search"><input type="search" name="search" placeholder="Поиск петиции" v-model="search"></div>
-                        </div>
-                        <div id="modal_container" v-bind:style="{ height: (this.windowHeight - 56) + 'px' }">
-                            <div class="modal_item" v-for="(list_problem, index) in searchList" @click="problem_list(list_problem, index)">
-                                <div class="modal_item_squre">{{list_problem.content[0].number}}</div>
-                                <div class="modal_item_text_container">
-                                    <div class="modal_item_text_header">{{list_problem.content[1].header}}</div>
-                                    <div class="modal_item_text_a">{{cut_text(list_problem.content[2].text)}}</div>
-                                </div>
+                <div id="modal">
+                    <div id="top">
+                        <div id="menu" @click="second_menu_show = true"><img src="../../img/menu.png"/></div>
+                        <div id="search"><input type="search" name="search" placeholder="Поиск петиции"
+                                                v-model="search"></div>
+                    </div>
+                    <div id="table">
+                        <div id="important">Важность</div>
+                        <div id="description">Описание петиции</div>
+                    </div>
+                    <div id="modal_container" v-bind:style="{ height: (this.windowHeight - 101) + 'px' }">
+                        <div class="modal_item" v-for="(list_problem, index) in searchList">
+                            <div class="modal_item_squre">{{list_problem.content[0].number}}</div>
+                            <div class="modal_item_text_container">
+                                <div class="modal_item_text_header">{{list_problem.content[1].header}}</div>
+                                <div class="modal_item_text_a">{{cut_text(list_problem.content[2].text)}}</div>
                             </div>
                         </div>
                     </div>
+                </div>
                 <div id="modal_show_btn" @click="modal_show = !modal_show"><img src="../../img/left_btn.png"/></div>
             </div>
         </transition>
-        <transition name="fade"><div id="modal_show_btn_open" @click="modal_show = !modal_show" v-if="modal_show === false"><img src="../../img/right_btn.png"/></div></transition>
+        <transition name="fade">
+            <div id="modal_show_btn_open" @click="modal_show = !modal_show" v-if="modal_show === false"><img
+                    src="../../img/right_btn.png"/></div>
+        </transition>
 
-        <gmap-map v-bind="options" id="map" :options="{minZoom :  11 , maxZoom :  17, panControl: false, mapTypeControl: false, overviewMapControl: false, streetViewControl: false, fullscreenControl: false}">
+        <gmap-map v-bind="options" id="map"
+                  :options="{minZoom :  11 , maxZoom :  17, panControl: false, mapTypeControl: false, overviewMapControl: false, streetViewControl: false, fullscreenControl: false}">
             <gmap-cluster :grid-size="gridSize" :styles="clusterStyles">
-                <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
+                <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen"
+                                  @closeclick="infoWinOpen=false">
                 </gmap-info-window>
                 <gmap-marker
                         :key="index"
@@ -74,13 +86,16 @@
             </gmap-cluster>
         </gmap-map>
         <transition name="fade">
-            <div class="filter_btn_show_left" v-if="!filter_show" @click="filter_show = true"><img src="../../img/filter.svg"/></div>
+            <div class="filter_btn_show_left" v-if="!filter_show" @click="filter_show = true"><img
+                    src="../../img/filter.svg"/></div>
         </transition>
         <transition name="right">
             <div id="filter" v-if="filter_show">
                 <div class="h1">
+                    <img src="../../img/filter.svg" >
                     <a class="header_1">Фильтры</a>
-                    <div class="filter_btn_show" @click="filter_show = false"><img src="../../img/right_btn_2.png"/></div>
+                    <div class="filter_btn_show" @click="filter_show = false"><img src="../../img/right_btn_2.png"/>
+                    </div>
                 </div>
                 <div class="district_box">
                     <div class="h3">
@@ -142,17 +157,20 @@
     import {gmapApi} from "vue2-google-maps";
     import GmapCluster from 'vue2-google-maps/dist/components/cluster'
     import GmapCustomMarker from 'vue2-gmap-custom-marker';
-    
+
     import axios from 'axios';
     import Vue from 'vue';
 
     Vue.component('GmapCluster', GmapCluster);
     Vue.component('GmapCustomMarker', GmapCustomMarker);
 
-    const mapMarker = require('../../img/marker.png');
+    const mapMarker = require('../../img/vector_marker.svg');
     const mapCluster34 = require('../../img/Ellipse34.png');
     const mapCluster44 = require('../../img/Ellipse44.png');
     const mapCluster64 = require('../../img/Ellipse64.png');
+    // const mapCluster34 = require('../../img/circle.svg');
+    // const mapCluster44 = require('../../img/circle.svg');
+    // const mapCluster64 = require('../../img/circle.svg');
 
     export default {
         name: "GoogleMap",
@@ -167,14 +185,14 @@
                 filter_show: true,
                 markerOptions: {
                     url: mapMarker,
-                   // size: {width: 60, height: 90, f: 'px', b: 'px',},
+                    // size: {width: 60, height: 90, f: 'px', b: 'px',},
                     scaledSize: {width: 40, height: 40, f: 'px', b: 'px',},
                 },
                 list_problems: [
                     //{content:[{number:'100'},{header:'Не хватает пешеходного перехода'},{text:'Проблематично пройти в почтовое отделение на Красной'},{position: { lat: 53.181684, lng: 45.006000 }}]},
                 ],
-                selected_district: ["Октябрьский","Железнодорожный","Ленинский","Первомайский"],
-                district: ["Октябрьский","Железнодорожный","Ленинский","Первомайский"],
+                selected_district: ["Октябрьский", "Железнодорожный", "Ленинский", "Первомайский"],
+                district: ["Октябрьский", "Железнодорожный", "Ленинский", "Первомайский"],
                 selected_type: ['Образование', 'Транспорт', 'Экология', 'Социум', 'Безопасность'],
                 type: ['Образование', 'Транспорт', 'Экология', 'Социум', 'Безопасность'],
                 options: {  // опции карты
@@ -196,27 +214,27 @@
                 },
                 markers: [
                     {
-                        position: { lat: 53.181684, lng: 45.006000 },
+                        position: {lat: 53.181684, lng: 45.006000},
                         infoText: '<strong>Marker 1</strong>',
                     },
                     {
-                        position: { lat: 53.221786, lng: 44.925017 },
+                        position: {lat: 53.221786, lng: 44.925017},
                         infoText: '<strong>Marker 2</strong>'
                     },
                     {
-                        position: { lat: 53.224440, lng: 44.945736 },
+                        position: {lat: 53.224440, lng: 44.945736},
                         infoText: '<strong>Marker 3</strong>'
                     },
                     {
-                        position: { lat: 53.209817, lng: 44.972125 },
+                        position: {lat: 53.209817, lng: 44.972125},
                         infoText: '<strong>Marker 4</strong>'
                     },
                     {
-                        position: { lat: 53.182392, lng: 45.011556 },
+                        position: {lat: 53.182392, lng: 45.011556},
                         infoText: '<strong>Marker 5</strong>'
                     },
                     {
-                        position: { lat: 53.218497, lng: 44.888768 },
+                        position: {lat: 53.218497, lng: 44.888768},
                         infoText: '<strong>Marker 6</strong>'
                     },
                 ],
@@ -265,12 +283,12 @@
                 .catch(error => console.log(error));
 
         },
-        mounted () {
+        mounted() {
             window.onresize = (event) => {
 
                 this.windowHeight = window.innerHeight;
 
-                }
+            }
         },
         components: {
             gmapApi
@@ -289,7 +307,7 @@
                 this.options.center.lng = lng;
             },
             cut_text(value) {
-                return (value.length >= 90)?((value.slice(0,90) + "...")):(value)
+                return (value.length >= 90) ? ((value.slice(0, 90) + "...")) : (value)
 
             },
             check_all_checked_type(types) {
@@ -301,7 +319,7 @@
                     this.selected_type.push(types);
                 }
 
-                (this.selected_type.length !== this.type.length)?(this.check_filter_publication_all = false):(this.check_filter_publication_all = true);
+                (this.selected_type.length !== this.type.length) ? (this.check_filter_publication_all = false) : (this.check_filter_publication_all = true);
 
                 console.log(this.selected_type);
             },
@@ -314,17 +332,17 @@
                     this.selected_district.push(value);
                 }
 
-                (this.selected_district.length !== this.district.length)?(this.check_filter_publication_all = false):(this.check_filter_publication_all = true);
+                (this.selected_district.length !== this.district.length) ? (this.check_filter_publication_all = false) : (this.check_filter_publication_all = true);
 
-              /*  if (this.selected_district.length !== this.types_of_publication.length) {
-                    this.check_filter_publication_all = false;
-                    document.getElementById('filter_check_all').checked = true;      // disable checkbox
-                } else {
-                    this.check_filter_publication_all = true;
-                    document.getElementById('filter_check_all').checked = false;      // enable checkbox
-                }    */
+                /*  if (this.selected_district.length !== this.types_of_publication.length) {
+                      this.check_filter_publication_all = false;
+                      document.getElementById('filter_check_all').checked = true;      // disable checkbox
+                  } else {
+                      this.check_filter_publication_all = true;
+                      document.getElementById('filter_check_all').checked = false;      // enable checkbox
+                  }    */
 
-                 console.log(this.selected_district);
+                console.log(this.selected_district);
                 // console.log("include = " + include);
             },
 
@@ -339,46 +357,84 @@
     @import "../styles_fonts";
 
     $text_color: #222222;
+    $second_text_color: #717171;
+    $def_font: PTSans-Regular, "PTSans-Regular", sans-serif;
+    $bold_font: PTsans-Bold, "PTSans-Bold", sans-serif;
+    $bg_color: #f5f5f5;
 
-    html, body, h1, h2, h3, h4, h5, h6 {
+    body, h1, h2, h3, h4, h5, h6 {
         margin: 0;
         padding: 0;
-        font-family: Roboto-Light, "Roboto-Light", sans-serif;
+        font-family: $def_font;
         overflow: hidden;
     }
 
     .fade-enter-active, .fade-leave-active {
         transition: opacity .5s;
     }
-    .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+
+    .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */
+    {
         opacity: 0;
     }
 
     .slide-fade-enter-active {
         transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
     }
+
     .slide-fade-leave-active {
         transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
     }
+
     .slide-fade-enter, .slide-fade-leave-to
-        /* .slide-fade-leave-active до версии 2.1.8 */ {
+        /* .slide-fade-leave-active до версии 2.1.8 */
+    {
         transform: translateX(-500px);
-      //  opacity: 0;
+        //  opacity: 0;
     }
 
+    #table {
+        display: flex;
+        flex-direction: row;
+        height: 40px;
+        width: 100%;
+        border-bottom: 1px solid #5f5f5f;
+        background-color: #cecdc7;
+        font-family: $def_font;
+    }
+
+
+    #important {
+        width: 20%;
+        height: 100%;
+        border-right: 1px solid #5f5f5f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #description {
+        width: 80%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
 
     .right-enter-active {
         transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
         overflow: hidden;
     }
+
     .right-leave-active {
         transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
         overflow: hidden;
     }
 
     .right-enter, .right-leave-to
-        /* .slide-fade-leave-active до версии 2.1.8 */ {
+        /* .slide-fade-leave-active до версии 2.1.8 */
+    {
         transform: translateX(500px);
         //  opacity: 0;
         overflow: hidden;
@@ -399,28 +455,94 @@
         z-index: 10;
         top: 0;
         left: 0;
-        width: 400px;
-        background-color: #fff;
+        width: 450px;
+        background-color: $bg_color;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         display: flex;
         flex-direction: column;
-        img {
-            width: 24px;
-            height: 24px;
-        }
+        font-family: $bold_font;
 
         #second_menu_header, #second_menu_second {
             border-bottom: 1px solid #bbb;
         }
 
+        #second_menu_second, #second_menu_third{
+
+            padding-left: 16px;
+            padding-top: 8px;
+
+            img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        #second_menu_header_h{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 16px;
+            padding-right: 16px;
+            font-size: 21px;
+            width: 100%;
+        }
+
+        #second_menu_header_btn{
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .second_menu_second_content{
+
+            display: flex;
+            flex-direction: row;
+            padding-bottom: 20px;
+
+            a{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding-left: 30px;
+            }
+
+            a:visited {
+                color: #551a8b;
+            }
+            a:hover {
+                color: #06e;
+                cursor: pointer;
+            }
+            a:focus {
+                outline: thin dotted;
+            }
+            a:hover, a:active {
+                outline: 0;
+            }
+
+            a, a:visited, a:active {
+                text-decoration: none;
+                color: $text_color;
+                -webkit-transition: all .1s ease-in-out;
+            }
+
+        }
+
+        .second_menu_second_content.hover{
+            color: blue;
+        }
+
         #second_menu_header {
             display: flex;
             flex-direction: row;
-
+            padding: 16px;
+            height: 60px;
             #second_menu_header_btn:hover {
                 cursor: pointer;
             }
         }
+
     }
 
     #modal_show_btn_open {
@@ -432,7 +554,7 @@
         border: 1px solid #bbb;
         margin: 8px 0 0 4px;
         border-radius: 5px;
-        display:flex;
+        display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
@@ -457,8 +579,8 @@
     }
 
     #modal {
-      //  position: absolute;
-      //  z-index: 5;
+        //  position: absolute;
+        //  z-index: 5;
         top: 0;
         left: 0;
         width: 500px;
@@ -467,17 +589,24 @@
         font-size: 16px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 
+        #search {
+            width: 100%;
+            margin-left: 20px;
+        }
+
         #top {
             background-color: #434240;
             display: flex;
             flex-direction: row;
             align-items: center;
-            padding: 0 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
 
             #search input {
                 height: 40px;
-                width: 400px;
-                margin: 8px 0 8px 20px;
+                width: 100%;
                 padding-right: 10px;
                 font-size: 16px;
                 padding-left: 10px;
@@ -488,6 +617,7 @@
         #menu {
             width: 30px;
             height: 30px;
+
             img {
                 width: 30px;
                 height: 30px;
@@ -500,24 +630,29 @@
 
         #modal_container {
             overflow: auto;
-            
+            font-family: $def_font;
+            background-color: #f5f5f5;
+
             .modal_item {
                 display: flex;
                 flex-direction: row;
                 padding: 10px 0;
                 border-bottom: 1px solid #bbb;
-                
+
                 .modal_item_squre {
                     width: 60px;
                     height: 60px;
-                    background-color: #3300FF;    // default #3300FF
+                    background-color: #000096; // default #3300FF
                     border-radius: 50px;
-                    border: 1px solid #bbb;
+                    border: 1px solid #826df3;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     color: #fff;
                     margin: 0 20px;
+                    box-shadow: 5px 5px 10px 0px rgba(189, 189, 189, 1);
+                    -webkit-box-shadow: 5px 5px 10px 0px rgba(189, 189, 189, 1);
+                    -moz-box-shadow: 5px 5px 10px 0px rgba(189, 189, 189, 1);
                 }
 
                 .modal_item_text_container {
@@ -525,10 +660,14 @@
                     width: 380px;
 
                     .modal_item_text_header {
-                        font-weight: bold;
+                        font-size: 16px;
+                        color: $text_color;
                     }
+
                     .modal_item_text_a {
-                        color: #717171;
+                        color: $second_text_color;
+                        font-size: 14px;
+                        margin-top: 6px;
                     }
                 }
 
@@ -544,7 +683,7 @@
         border: 1px solid #bbb;
         margin: 8px 0 0 4px;
         border-radius: 5px;
-        display:flex;
+        display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
@@ -552,7 +691,7 @@
         img {
             width: 36px;
             height: 36px;
-           
+
         }
     }
 
@@ -624,7 +763,7 @@
         }
 
         /*.label-check__input {*/
-            /**/
+        /**/
         /*}*/
 
         .filter_1_container {
@@ -652,23 +791,24 @@
         }
 
         .sorting {
-            font-family: rml, "PTSans-Regular", sans-serif;
+            font-family: $def_font;
             width: 100%;
         }
 
         .sorting option {
-            font-family: rml, "PTSans-Regular", sans-serif;
-            color: #BBBBBB
+            font-family: $def_font;
+            color: $second_text_color
         }
 
         .header_1 {
             font-size: 22px;
-            font-family: ptr, "PTSans-Regular", sans-serif;
+            padding-left: 16px  ;
+            font-family: $def_font;
         }
 
         .header_2 {
             font-size: 18px;
-            font-family: ptr, "PTSans-Regular", sans-serif;
+            font-family: $def_font;
         }
 
         .h1 {
@@ -680,13 +820,15 @@
             display: flex;
             flex-direction: row;
 
+            img {
+                width: 30px;
+                height: 30px;
+            }
+
             .filter_btn_show {
                 position: absolute;
                 right: 20px;
-                img {
-                    width: 30px;
-                    height: 30px;
-                }
+
             }
 
             .filter_btn_show:hover {
@@ -702,18 +844,8 @@
         }
 
         .checkbox_text {
-            font-family: ptr, "PTSans-Regular", sans-serif;
+            font-family: $def_font;
             font-size: 14px;
-        }
-
-        .h1::before {
-            background-image: url("../img/filter.svg");
-            display: inline-block;
-            margin-right: 10px;
-            background-repeat: no-repeat;
-            width: 20px;
-            height: 18px;
-            content: '';
         }
 
         .district_box {
