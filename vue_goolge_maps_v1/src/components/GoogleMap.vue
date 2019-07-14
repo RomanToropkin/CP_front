@@ -63,7 +63,7 @@
                 </gmap-info-window>
                 <gmap-marker
                         :key="index"
-                        v-for="(list_problem, index) in list_problems"
+                        v-for="(list_problem, index) in searchList"
                         :position="list_problem.content[3].position"
                         :clickable="true"
                         :label="list_problem.content[3].label"
@@ -258,7 +258,7 @@
                         } else {
                             num += ' %';
                         }
-                        this.list_problems.push({content: [{number: String(num)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {position: { lat: Number(data[key].cord_x), lng:  Number(data[key].cord_y)}}, {id_solution: String(data[key].id_solution)}]});
+                        this.list_problems.push({content: [{number: String(num)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {position: { lat: Number(data[key].cord_x), lng:  Number(data[key].cord_y)}}, {id_solution: String(data[key].id_solution)}, {district: String(data[key].district)}, {type: String(data[key].type)}]});
                         
                     }
                 })
@@ -277,7 +277,7 @@
         },
         computed: {
             searchList () {
-                    return this.list_problems.filter( item => item.content[1].header.toLowerCase().includes(this.search.toLowerCase()))
+                    return this.list_problems.filter( item => ((item.content[1].header.toLowerCase().includes(this.search.toLowerCase())) && (this.selected_district.includes(item.content[5].district)) && (this.selected_type.includes(item.content[6].type))))
             }
         },
         methods: {
