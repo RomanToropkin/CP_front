@@ -14,16 +14,28 @@
                 <div id="second_menu_second">
                     <div class="second_menu_second_content">
                         <img src="../../img/petit.png"/>
-                        <a>Все петиции</a>
+                        <a @click="menu_select('Все петиции')">Все петиции</a>
                     </div>
                     <div class="second_menu_second_content">
+<<<<<<< Updated upstream
                         <img src="../../img/pen.png"/>
                         <a>Вы подписали</a>
+=======
+                        <img src="../../img/add.svg"/>
+                        <a @click="menu_select('Создать петицию')">Создать петицию</a>
+>>>>>>> Stashed changes
                     </div>
                     <div class="second_menu_second_content">
                         <img src="../../img/email.png"/>
-                        <a>Созданные вами петиции</a>
+                        <a @click="menu_select('Созданные вами петиции')">Созданные вами петиции</a>
                     </div>
+<<<<<<< Updated upstream
+=======
+                    <div class="second_menu_second_content">
+                        <img src="../../img/pen.png"/>
+                        <a @click="menu_select('Вы подписали')">Вы подписали</a>
+                    </div>
+>>>>>>> Stashed changes
                 </div>
                 <div id="second_menu_third">
                     <div class="second_menu_second_content">
@@ -39,10 +51,11 @@
         </transition>
         <transition name="slide-fade">
             <div id="modal_cont" v-if="modal_show">
-                <div id="modal">
-                    <div id="top">
-                        <div id="menu" @click="second_menu_show = true"><img src="../../img/menu.png"/></div>
-                        <div id="search"><input type="search" name="search" placeholder="Поиск петиции"
+
+                <div class="modal" v-if="all_petition">                                                             <!-- все петиции -->
+                    <div class="top">
+                        <div class="menu" @click="second_menu_show = true"><img src="../../img/menu.png"/></div>
+                        <div class="search"><input type="search" name="search" placeholder="Поиск петиции"
                                                 v-model="search"></div>
                     </div>
                     <div id="table">
@@ -59,6 +72,29 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="modal" v-if="create_petition">                                                          <!-- созданные петиции -->
+                    <div class="top">
+                        <div class="menu" @click="second_menu_show = true"><img src="../../img/menu.png"/></div>
+                        <div class="top_header"><a>Создание петиции</a></div>
+                        <div class="modal_create_petition_close_btn" @click="menu_select('Все петиции')"><img src="../../img/icon_close.png"/></div>
+                    </div>
+                    <div class="create_petition_container" v-bind:style="{ height: (this.windowHeight - 60) + 'px' }">
+                        <a>Название петиции</a>
+                        <input  placeholder="Введите название петиции" v-model="create_petition_name">
+                        <a>Описание</a>
+                        <textarea v-model="create_petition_description" placeholder="Опишите вашу проблему"></textarea>
+                        <a>Загрузить изображение</a>
+                        <input type="file" name="image">
+                        <a v-if="this.add_position.lat !== ''">Координаты выбранной точки:</a>
+                        <a v-else>Выберите точку на карте где находится проблема</a>
+                        <input v-if="this.add_position.lat !== ''" :value="this.add_position.lat + ', ' + this.add_position.lng" disabled>
+                        <input v-else disabled>
+                    </div>
+                    <div id="create_petition_publicated">Опубликовать</div>
+                </div>
+
+
                 <div id="modal_show_btn" @click="modal_show = !modal_show"><img src="../../img/left_btn.png"/></div>
             </div>
         </transition>
@@ -67,23 +103,38 @@
                     src="../../img/right_btn.png"/></div>
         </transition>
 
+       <!-- <gmap-place-input label="Add a marker at this place" :select-first-on-enter="true" @place_changed="updatePlace($event)"></gmap-place-input>   -->
+
         <gmap-map v-bind="options" id="map"
+                  @click="map_cluster_add($event)"
                   :options="{minZoom :  11 , maxZoom :  17, panControl: false, mapTypeControl: false, overviewMapControl: false, streetViewControl: false, fullscreenControl: false}">
             <gmap-cluster :grid-size="gridSize" :styles="clusterStyles">
                 <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen"
                                   @closeclick="infoWinOpen=false">
                 </gmap-info-window>
+                <div v-if="!create_petition">
+                    <gmap-marker
+                            :key="index"
+                            v-for="(list_problem, index) in searchList"
+                            :position="list_problem.content[3].position"
+                            :clickable="true"
+                            :label="list_problem.content[3].label"
+                            :icon="markerOptions"
+                            @click="toggleInfoWindow(list_problem, index)"
+                    >
+                    </gmap-marker>
+                </div>
+            </gmap-cluster>
+
+            <div v-if="create_petition">
                 <gmap-marker
-                        :key="index"
-                        v-for="(list_problem, index) in searchList"
-                        :position="list_problem.content[3].position"
+                        :key="1234"
+                        :position="add_position"
                         :clickable="true"
-                        :label="list_problem.content[3].label"
                         :icon="markerOptions"
-                        @click="toggleInfoWindow(list_problem, index)"
                 >
                 </gmap-marker>
-            </gmap-cluster>
+            </div>
         </gmap-map>
         <transition name="fade">
             <div class="filter_btn_show_left" v-if="!filter_show" @click="filter_show = true"><img
@@ -138,9 +189,9 @@
                     </div>
                     <div class="sort_block">
                         <label>
-                            <select class="sorting">
-                                <option>По удаленности</option>
-                                <option>По актуальности</option>
+                            <select class="sorting" v-model="sort_block_selected">
+                                <option>По важности</option>
+                               <!-- <option>По удаленности</option> -->
                                 <option>По дате создания</option>
                                 <option>По статусу выполнения</option>
                             </select>
@@ -181,8 +232,16 @@
                 second_menu_show: false,
                 gridSize: 100,
                 search: '',
+                add_position: {lat: '', lng: ''},
                 modal_show: true,
                 filter_show: true,
+                all_petition: true, // стр. все петиции
+                create_petition: false, // стр. создать петицию
+                you_create_petition: false, // стр. созданные вами петиции
+                you_subscribe: false,    // стр. вы подписали
+                sort_block_selected: '',
+                create_petition_name: '', // название петиции
+                create_petition_description: '',  // Описание петиции
                 markerOptions: {
                     url: mapMarker,
                     // size: {width: 60, height: 90, f: 'px', b: 'px',},
@@ -212,32 +271,6 @@
                         height: -44
                     }
                 },
-                markers: [
-                    {
-                        position: {lat: 53.181684, lng: 45.006000},
-                        infoText: '<strong>Marker 1</strong>',
-                    },
-                    {
-                        position: {lat: 53.221786, lng: 44.925017},
-                        infoText: '<strong>Marker 2</strong>'
-                    },
-                    {
-                        position: {lat: 53.224440, lng: 44.945736},
-                        infoText: '<strong>Marker 3</strong>'
-                    },
-                    {
-                        position: {lat: 53.209817, lng: 44.972125},
-                        infoText: '<strong>Marker 4</strong>'
-                    },
-                    {
-                        position: {lat: 53.182392, lng: 45.011556},
-                        infoText: '<strong>Marker 5</strong>'
-                    },
-                    {
-                        position: {lat: 53.218497, lng: 44.888768},
-                        infoText: '<strong>Marker 6</strong>'
-                    },
-                ],
                 clusterStyles: [
                     {
                         textColor: '#fff',
@@ -276,7 +309,7 @@
                         } else {
                             num += ' %';
                         }
-                        this.list_problems.push({content: [{number: String(num)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {position: { lat: Number(data[key].cord_x), lng:  Number(data[key].cord_y)}}, {id_solution: String(data[key].id_solution)}, {district: String(data[key].district)}, {type: String(data[key].type)}]});
+                        this.list_problems.push({content: [{number: String(num)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {position: { lat: Number(data[key].cord_x), lng:  Number(data[key].cord_y)}}, {id_solution: String(data[key].id_solution)}, {district: String(data[key].district)}, {type: String(data[key].type)}, {time: String(data[key].time)}, {status: String(data[key].status)}]});
                         
                     }
                 })
@@ -293,18 +326,122 @@
         components: {
             gmapApi
         },
+        watch: {
+            create_petition(after, before) {
+                setMapOnAll(null);
+                console.log("before = " + before);
+                if (before === true) {
+                    this.add_position.lat = '';
+                    this.add_position.lng = '';
+                }
+            }
+        },
         computed: {
+            // сортировка
             searchList () {
+                 if (this.sort_block_selected === 'По важности') {
+                     this.list_problems.sort(function (a, b) {
+                         let a1, b1;
+                         if (a.content[0].number !== '-') {
+                             a1 = Number(a.content[0].number.slice(0, -2))
+                         } else {
+                             a1 = Number('0')
+                         }
+                         if (b.content[0].number !== '-') {
+                             b1 = Number(b.content[0].number.slice(0, -2))
+                         } else {
+                             b1 = Number('0')
+                         }
+
+                         if ((a1) < (b1)) {
+                             return 1;
+                         }
+                         if ((a1) > (b1)) {
+                             return -1;
+                         }
+
+                         return 0;
+                     });
+                 } else if (this.sort_block_selected === 'По дате создания') {
+                     //7 time
+                     this.list_problems.sort(function (a, b) {
+
+                         if ((a.content[7].time) < (b.content[7].time)) {
+                             return 1;
+                         }
+                         if ((a.content[7].time) > (b.content[7].time)) {
+                             return -1;
+                         }
+
+                         return 0;
+                     });
+                 } else if (this.sort_block_selected === 'По статусу выполнения') {
+                     //7 time
+                     this.list_problems.sort(function (a, b) {
+                         let a1, b1;
+                         if (String(a.content[8].status) === 'Выполнен') a1 = 3;
+                         if (String(a.content[8].status) === 'В процессе') a1 = 2;
+                         if (String(a.content[8].status) === 'Не выполнен') a1 = 1;
+
+                         if (String(b.content[8].status) === 'Выполнен') b1 = 3;
+                         if (String(b.content[8].status) === 'В процессе') b1 = 2;
+                         if (String(b.content[8].status) === 'Не выполнен') b1 = 1;
+
+                         console.log('По статусу выполнения = ' + String(a.content[8].status).length);
+                         if (a1 < b1) {
+                             return 1;
+                         }
+                         if (a1 > b1) {
+                             return -1;
+                         }
+
+                         return 0;
+                     });
+                 }
+
                     return this.list_problems.filter( item => ((item.content[1].header.toLowerCase().includes(this.search.toLowerCase())) && (this.selected_district.includes(item.content[5].district)) && (this.selected_type.includes(item.content[6].type))))
             }
         },
         methods: {
-            problem_list(list_problem, i) {
-                console.log('list_problem');
-                let lat = list_problem.content[3].position.lat;
-                let lng = list_problem.content[3].position.lng;
-                this.options.center.lat = lat;
-                this.options.center.lng = lng;
+            updatePlace(place) {
+                    console.log("lat = " + place.geometry.location.lat());
+                    console.log("lng = " + place.geometry.location.lng());
+                   // marker.position.lng = place.geometry.location.lng();
+
+            },
+             map_cluster_add(r) {
+                /* console.log(r.latLng.lat());
+                 console.log(r.latLng.lng());    */
+                 this.add_position.lat = r.latLng.lat();
+                 this.add_position.lng = r.latLng.lng();
+             },
+            placeMarker(event) {
+                   console.log(event.get('coordPosition'));
+            },
+            menu_select(name) {
+                this.second_menu_show = false;
+                
+                if (name === 'Все петиции') {
+                    this.all_petition = true; // стр. все петиции
+                    this.create_petition = false; // стр. создать петицию
+                    this.you_create_petition = false; // стр. созданные вами петиции
+                    this.you_subscribe = false;    // стр. вы подписали
+                } else if (name === 'Создать петицию') {
+                    this.all_petition = false; // стр. все петиции
+                    this.create_petition = true; // стр. создать петицию
+                    this.you_create_petition = false; // стр. созданные вами петиции
+                    this.you_subscribe = false;    // стр. вы подписали
+                } else if (name === 'Созданные вами петиции') {
+                    this.all_petition = false; // стр. все петиции
+                    this.create_petition = false; // стр. создать петицию
+                    this.you_create_petition = true; // стр. созданные вами петиции
+                    this.you_subscribe = false;    // стр. вы подписали
+                } else if (name === 'Вы подписали') {
+                    this.all_petition = false; // стр. все петиции
+                    this.create_petition = false; // стр. создать петицию
+                    this.you_create_petition = false; // стр. созданные вами петиции
+                    this.you_subscribe = true;    // стр. вы подписали
+                }
             },
             cut_text(value) {
                 return (value.length >= 90) ? ((value.slice(0, 90) + "...")) : (value)
@@ -419,6 +556,17 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .modal {
+        height: 60px;
+        font-family: PTsans-Bold, "PTSans-Bold", sans-serif;
+    }
+
+    .top_header {
+        padding-left: 20px;
+        font-size: 19px;
+        color: #fff;
     }
 
 
@@ -578,7 +726,7 @@
         flex-direction: row;
     }
 
-    #modal {
+    .modal {
         //  position: absolute;
         //  z-index: 5;
         top: 0;
@@ -589,12 +737,65 @@
         font-size: 16px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 
-        #search {
+        // 2-е меню
+        .create_petition_container {
+            display: flex;
+            flex-direction: column;
+            color: #222;
+            padding: 5px 30px;
+            background-color: #fff;
+
+
+            a {
+                font-size: 18px;
+                font-family: $def_font;
+                margin: 10px 0;
+            }
+
+            input {
+                height: 30px;
+                padding-right: 10px;
+                font-size: 16px;
+                padding-left: 10px;
+                border-radius: 5px;
+                outline:none;
+                border: 1px solid #9a9a9a;
+            }
+
+            textarea {
+                height: 300px !important;
+                border-radius: 5px;
+                font-size: 16px;
+                outline:none;
+                border: 1px solid #9a9a9a;
+                padding: 6px 10px;
+            }
+
+            input[name="image"] {
+                height: 30px;
+                padding-right: 10px;
+                font-size: 16px;
+                padding-left: 10px;
+                border-radius: 5px;
+                outline:none;
+                border: none;
+            }
+
+            .create_petition_coords_a {
+                display: flex;
+                justify-content: center;
+                padding-top: 10px;
+            }
+        }
+
+
+
+        .search {
             width: 100%;
             margin-left: 20px;
         }
 
-        #top {
+        .top {
             background-color: #434240;
             display: flex;
             flex-direction: row;
@@ -604,7 +805,22 @@
             padding-top: 10px;
             padding-bottom: 10px;
 
-            #search input {
+            .modal_create_petition_close_btn {
+                position: absolute;
+                right: 70px;
+                img {
+                    width: 30px;
+                    height: 30px;
+                    margin-top: 4px;
+
+                }
+            }
+
+            .modal_create_petition_close_btn:hover {
+                cursor: pointer;
+            }
+
+            .search input {
                 height: 40px;
                 width: 100%;
                 padding-right: 10px;
@@ -614,7 +830,7 @@
 
         }
 
-        #menu {
+        .menu {
             width: 30px;
             height: 30px;
 
@@ -624,7 +840,7 @@
             }
         }
 
-        #menu:hover {
+        .menu:hover {
             cursor: pointer;
         }
 
