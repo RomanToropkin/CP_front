@@ -75,7 +75,7 @@
                 </gmap-info-window>
                 <gmap-marker
                         :key="index"
-                        v-for="(list_problem, index) in list_problems"
+                        v-for="(list_problem, index) in searchList"
                         :position="list_problem.content[3].position"
                         :clickable="true"
                         :label="list_problem.content[3].label"
@@ -276,15 +276,8 @@
                         } else {
                             num += ' %';
                         }
-                        this.list_problems.push({
-                            content: [{number: String(num)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {
-                                position: {
-                                    lat: Number(data[key].cord_x),
-                                    lng: Number(data[key].cord_y)
-                                }
-                            }, {id_solution: String(data[key].id_solution)}]
-                        });
-
+                        this.list_problems.push({content: [{number: String(num)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {position: { lat: Number(data[key].cord_x), lng:  Number(data[key].cord_y)}}, {id_solution: String(data[key].id_solution)}, {district: String(data[key].district)}, {type: String(data[key].type)}]});
+                        
                     }
                 })
                 .catch(error => console.log(error));
@@ -301,11 +294,18 @@
             gmapApi
         },
         computed: {
-            searchList() {
-                return this.list_problems.filter(item => item.content[1].header.toLowerCase().includes(this.search.toLowerCase()))
+            searchList () {
+                    return this.list_problems.filter( item => ((item.content[1].header.toLowerCase().includes(this.search.toLowerCase())) && (this.selected_district.includes(item.content[5].district)) && (this.selected_type.includes(item.content[6].type))))
             }
         },
         methods: {
+            problem_list(list_problem, i) {
+                console.log('list_problem');
+                let lat = list_problem.content[3].position.lat;
+                let lng = list_problem.content[3].position.lng;
+                this.options.center.lat = lat;
+                this.options.center.lng = lng;
+            },
             cut_text(value) {
                 return (value.length >= 90) ? ((value.slice(0, 90) + "...")) : (value)
 
@@ -346,18 +346,8 @@
                 // console.log("include = " + include);
             },
 
-            toggleInfoWindow(marker, index) {
-                this.infoWindowPos = marker.position;
-                this.infoOptions.content = marker.infoText;
-                //check if its the same marker that was selected if yes toggle
-                if (this.currentMidx == index) {
-                    this.infoWinOpen = !this.infoWinOpen;
-                }
-                //if different marker set infowindow to open and reset current marker index
-                else {
-                    this.infoWinOpen = true;
-                    this.currentMidx = index;
-                }
+            toggleInfoWindow(list_problem, index) {
+                this.search = list_problem.content[1].header;
             }
         }
     };
