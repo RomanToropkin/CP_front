@@ -16,35 +16,32 @@
                         <img src="../../img/petit.png"/>
                         <a @click="menu_select('Все петиции')">Все петиции</a>
                     </div>
-                    <div class="second_menu_second_content">
-<<<<<<< Updated upstream
-                        <img src="../../img/pen.png"/>
-                        <a>Вы подписали</a>
-=======
+                    <div class="second_menu_second_content" v-if="check_panel_input === true">
                         <img src="../../img/add.svg"/>
                         <a @click="menu_select('Создать петицию')">Создать петицию</a>
->>>>>>> Stashed changes
                     </div>
-                    <div class="second_menu_second_content">
+                    <div class="second_menu_second_content" v-if="check_panel_input === true">
                         <img src="../../img/email.png"/>
                         <a @click="menu_select('Созданные вами петиции')">Созданные вами петиции</a>
                     </div>
-<<<<<<< Updated upstream
-=======
-                    <div class="second_menu_second_content">
+                    <div class="second_menu_second_content" v-if="check_panel_input === true">
                         <img src="../../img/pen.png"/>
                         <a @click="menu_select('Вы подписали')">Вы подписали</a>
                     </div>
->>>>>>> Stashed changes
                 </div>
                 <div id="second_menu_third">
-                    <div class="second_menu_second_content">
+                    <div class="second_menu_second_content" v-if="check_panel_input === true">
                         <img src="../../img/people.png"/>
-                        <a>Профиль</a>
+                        <a>{{user_name}}</a>
+                    </div>
+                    <div class="second_menu_second_content" v-if="((moderator) && (check_panel_input === true))">
+                        <img src="../../img/admin.png"/>
+                        <a href="/moderator.html">Панель администратора</a>
                     </div>
                     <div class="second_menu_second_content">
                         <img src="../../img/exit.png"/>
-                        <a>Выход</a>
+                        <a href="/api.php?module=logout" v-if="check_panel_input === true">Выход</a>
+                        <a href="/auth.html" v-else>Авторизоваться</a>
                     </div>
                 </div>
             </div>
@@ -52,21 +49,22 @@
         <transition name="slide-fade">
             <div id="modal_cont" v-if="modal_show">
 
-                <div class="modal" v-if="all_petition">                                                             <!-- все петиции -->
+                <div class="modal" v-if="all_petition && show_2">                                                             <!-- все петиции -->
                     <div class="top">
                         <div class="menu" @click="second_menu_show = true"><img src="../../img/menu.png"/></div>
                         <div class="search"><input type="search" name="search" placeholder="Поиск петиции"
                                                 v-model="search"></div>
                     </div>
-                    <div id="table">
-                        <div id="important">Важность</div>
-                        <div id="description">Описание петиции</div>
+                    <div class="table">
+                        <div class="important">Важность</div>
+                        <div class="description">Описание петиции</div>
                     </div>
-                    <div id="modal_container" v-bind:style="{ height: (this.windowHeight - 101) + 'px' }">
-                        <div class="modal_item" v-for="(list_problem, index) in searchList">
+                    <div class="modal_container" v-bind:style="{ height: (this.windowHeight - 101) + 'px' }">
+                        <div class="modal_item" v-for="(list_problem, index) in searchList" @click="refactor_center(list_problem.content[3].position)">
                             <div class="modal_item_squre">{{list_problem.content[0].number}}</div>
                             <div class="modal_item_text_container">
                                 <div class="modal_item_text_header">{{list_problem.content[1].header}}</div>
+                                <div class="modal_item_text_time">{{timestampToDate(list_problem.content[7].time)}}</div>
                                 <div class="modal_item_text_a">{{cut_text(list_problem.content[2].text)}}</div>
                             </div>
                         </div>
@@ -79,19 +77,46 @@
                         <div class="top_header"><a>Создание петиции</a></div>
                         <div class="modal_create_petition_close_btn" @click="menu_select('Все петиции')"><img src="../../img/icon_close.png"/></div>
                     </div>
-                    <div class="create_petition_container" v-bind:style="{ height: (this.windowHeight - 60) + 'px' }">
-                        <a>Название петиции</a>
-                        <input  placeholder="Введите название петиции" v-model="create_petition_name">
-                        <a>Описание</a>
-                        <textarea v-model="create_petition_description" placeholder="Опишите вашу проблему"></textarea>
-                        <a>Загрузить изображение</a>
-                        <input type="file" name="image">
-                        <a v-if="this.add_position.lat !== ''">Координаты выбранной точки:</a>
-                        <a v-else>Выберите точку на карте где находится проблема</a>
-                        <input v-if="this.add_position.lat !== ''" :value="this.add_position.lat + ', ' + this.add_position.lng" disabled>
-                        <input v-else disabled>
+                    <form action="http://projectcenter.ddns.net/api.php" method="post" enctype="multipart/form-data">
+                        <div class="create_petition_container" v-bind:style="{ height: (this.windowHeight - 60) + 'px' }">
+                            <a>Название петиции</a>
+                            <input name="title" placeholder="Введите название петиции" v-model="create_petition_name">
+                            <a>Описание</a>
+                            <textarea name="dascription" v-model="create_petition_description" placeholder="Опишите вашу проблему"></textarea>
+                            <a>Загрузить изображение</a>
+                            <input name="image" type="file">
+                            <a v-if="this.add_position.lat !== ''">Координаты выбранной точки:</a>
+                            <a v-else>Выберите точку на карте где находится проблема</a>
+                            <input name="coords" v-if="this.add_position.lat !== ''" :value="this.add_position.lat + ', ' + this.add_position.lng" disabled>
+                            <input v-else disabled>
+                            <input name="coord_y" type="hidden" :value="add_position.lat">
+                            <input name="coord_x" type="hidden" :value="add_position.lng">
+                            <input type="hidden" name="module" value="create">
+                            <input type="submit" value="Опубликовать" id="create_petition_publicated">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal" v-if="you_subscribe">                                                             <!-- мои подписанные петиции -->
+                    <div class="top">
+                        <div class="menu" @click="second_menu_show = true"><img src="../../img/menu.png"/></div>
+                        <div class="search"><input type="search" name="search" placeholder="Поиск петиции"
+                                                   v-model="search"></div>
                     </div>
-                    <div id="create_petition_publicated">Опубликовать</div>
+                    <div class="table">
+                        <div class="important">Важность</div>
+                        <div class="description">Описание подписанной петиции</div>
+                    </div>
+                    <div class="modal_container" v-bind:style="{ height: (this.windowHeight - 101) + 'px' }">
+                        <div class="modal_item" v-for="(list_problem, index) in my_subscribe_petition" @click="refactor_center(list_problem.content[3].position)">
+                            <div class="modal_item_squre">{{list_problem.content[0].number}}</div>
+                            <div class="modal_item_text_container">
+                                <div class="modal_item_text_header">{{list_problem.content[1].header}}</div>
+                                <div class="modal_item_text_time">{{timestampToDate(list_problem.content[7].time)}}</div>
+                                <div class="modal_item_text_a">{{cut_text(list_problem.content[2].text)}}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -230,18 +255,24 @@
                 infoWindowPos: null,
                 infoWinOpen: false,
                 second_menu_show: false,
+                check_panel_input: false,
+                user_name: "",
                 gridSize: 100,
                 search: '',
-                add_position: {lat: '', lng: ''},
+                show_2: true,
                 modal_show: true,
+                moderator: false, // админка
                 filter_show: true,
                 all_petition: true, // стр. все петиции
                 create_petition: false, // стр. создать петицию
                 you_create_petition: false, // стр. созданные вами петиции
                 you_subscribe: false,    // стр. вы подписали
                 sort_block_selected: '',
+                
                 create_petition_name: '', // название петиции
                 create_petition_description: '',  // Описание петиции
+                add_position: {lat: '', lng: ''}, // Позиции маркера
+
                 markerOptions: {
                     url: mapMarker,
                     // size: {width: 60, height: 90, f: 'px', b: 'px',},
@@ -250,6 +281,7 @@
                 list_problems: [
                     //{content:[{number:'100'},{header:'Не хватает пешеходного перехода'},{text:'Проблематично пройти в почтовое отделение на Красной'},{position: { lat: 53.181684, lng: 45.006000 }}]},
                 ],
+                my_subscribe_petition: "",
                 selected_district: ["Октябрьский", "Железнодорожный", "Ленинский", "Первомайский"],
                 district: ["Октябрьский", "Железнодорожный", "Ленинский", "Первомайский"],
                 selected_type: ['Образование', 'Транспорт', 'Экология', 'Социум', 'Безопасность'],
@@ -300,8 +332,20 @@
                 .get('http://projectcenter.ddns.net/api.php?module=get&mode=points')
                 .then(response => {
 
+
+                    let moder = response.data.auth.is_moder;
+                    (moder === 1)?(this.moderator = true):(this.moderator = false);
+
                     let data = response.data.result;
-                    console.log(data);
+                    console.log(response.data);
+
+                    if (response.data.auth.status === 'fail') {
+                        (this.check_panel_input = false);
+                    } else {
+                        this.user_name = response.data.auth.username;
+                        (this.check_panel_input = true);
+                    }
+
                     for (let key in data) {
                         let num = data[key].votes;
                         if (num === null) {
@@ -315,13 +359,39 @@
                 })
                 .catch(error => console.log(error));
 
+            axios
+                .get('http://projectcenter.ddns.net/api.php?module=get&mode=vote')
+                .then(response => {
+
+                    let data = response.data.result;
+                    console.log('result');
+                     console.log(response.data);
+                    // my_subscribe_petition
+
+
+
+                        this.my_subscribe_petition.push({
+                            content: [{number: String(data[key].id_solution)}, {header: String(data[key].title)}, {text: String(data[key].dascription)}, {
+                                position: {
+                                    lat: Number(data[key].cord_x),
+                                    lng: Number(data[key].cord_y)
+                                }
+                            }, {id_solution: String(data[key].id_solution)}, {district: String(data[key].district)}, {type: String(data[key].type)}, {time: String(data[key].time)}, {status: String(data[key].status)}]
+                        });
+
+                })
+                .catch(error => console.log(error));
+
+
         },
         mounted() {
             window.onresize = (event) => {
 
                 this.windowHeight = window.innerHeight;
 
-            }
+            };
+
+
         },
         components: {
             gmapApi
@@ -338,6 +408,7 @@
         },
         computed: {
             // сортировка
+
             searchList () {
                  if (this.sort_block_selected === 'По важности') {
                      this.list_problems.sort(function (a, b) {
@@ -402,7 +473,15 @@
                     return this.list_problems.filter( item => ((item.content[1].header.toLowerCase().includes(this.search.toLowerCase())) && (this.selected_district.includes(item.content[5].district)) && (this.selected_type.includes(item.content[6].type))))
             }
         },
+
         methods: {
+            refactor_center(t) {
+                console.log("t.lat = " + t.lat);
+                 this.options.center.lat = t.lat;
+                 this.options.center.lng = t.lng;
+
+                // this.show_2 = false;
+            },
             updatePlace(place) {
                     console.log("lat = " + place.geometry.location.lat());
                     console.log("lng = " + place.geometry.location.lng());
@@ -485,6 +564,13 @@
 
             toggleInfoWindow(list_problem, index) {
                 this.search = list_problem.content[1].header;
+            },
+
+            timestampToDate(ts) {
+                let d = new Date();
+                d.setTime(ts);
+                return ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + d.getFullYear();
+
             }
         }
     };
@@ -530,7 +616,7 @@
         //  opacity: 0;
     }
 
-    #table {
+    .table {
         display: flex;
         flex-direction: row;
         height: 40px;
@@ -541,7 +627,7 @@
     }
 
 
-    #important {
+    .important {
         width: 20%;
         height: 100%;
         border-right: 1px solid #5f5f5f;
@@ -550,7 +636,7 @@
         align-items: center;
     }
 
-    #description {
+    .description {
         width: 80%;
         height: 100%;
         display: flex;
@@ -617,7 +703,7 @@
         #second_menu_second, #second_menu_third{
 
             padding-left: 16px;
-            padding-top: 8px;
+            padding-top: 14px;
 
             img {
                 width: 24px;
@@ -744,6 +830,7 @@
             color: #222;
             padding: 5px 30px;
             background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 
 
             a {
@@ -769,6 +856,7 @@
                 outline:none;
                 border: 1px solid #9a9a9a;
                 padding: 6px 10px;
+                font-family: $def_font;
             }
 
             input[name="image"] {
@@ -785,6 +873,30 @@
                 display: flex;
                 justify-content: center;
                 padding-top: 10px;
+            }
+
+            #create_petition_publicated {
+                width: 100%;
+                height: 40px;
+                //border: 1px solid #0039e7;
+                color: #fff;
+                border: 1px solid rgb(0, 139, 241);
+                background: rgb(0, 139, 241);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 40px auto 0 auto;
+                border-radius: 5px;
+                transition: 0.3s;
+                box-shadow:16px 12px 21px 0px rgba(230,230,230,1);
+                -webkit-box-shadow:16px 12px 21px 0px rgba(230,230,230,1);
+                -moz-box-shadow:16px 12px 21px 0px rgba(230,230,230,1);
+            }
+
+            #create_petition_publicated:hover {
+                cursor: pointer;
+                background: white;
+                color: rgb(0, 139, 241);
             }
         }
 
@@ -844,7 +956,7 @@
             cursor: pointer;
         }
 
-        #modal_container {
+        .modal_container {
             overflow: auto;
             font-family: $def_font;
             background-color: #f5f5f5;
@@ -877,6 +989,12 @@
 
                     .modal_item_text_header {
                         font-size: 16px;
+                        color: $text_color;
+                    }
+
+                    .modal_item_text_time {
+                        margin-top: 2px;
+                        font-size: 14px;
                         color: $text_color;
                     }
 
